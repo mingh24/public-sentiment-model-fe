@@ -1,88 +1,94 @@
 <template>
 	<view class="container">
 		<view class="questionnaire">
-			<view class="questionnaire-cell">
-				<u--text type="primary" :bold="true" size="16" text="1. 基本信息"></u--text>
+			<u-skeleton rows="20" :loading="isLoading">
+				<view class="questionnaire-cell">
+					<u--text type="primary" :bold="true" size="16" text="1. 基本信息"></u--text>
 
-				<u--form :model="submission" :rules="basicInfoFormRules" ref="basicInfoForm">
-					<u-form-item label="学号" :required="true" prop="studentId">
-						<u--input prefixIcon="account" placeholder="请输入学号" v-model="submission.studentId"></u--input>
-					</u-form-item>
+					<u--form :model="submission" :rules="basicInfoFormRules" ref="basicInfoForm">
+						<u-form-item label="学号" :required="true" prop="studentId">
+							<u--input prefixIcon="account" placeholder="请输入学号" v-model="submission.studentId">
+							</u--input>
+						</u-form-item>
 
-					<u-form-item label="姓名" :required="true" prop="name">
-						<u--input prefixIcon="account" placeholder="请输入姓名" v-model="submission.name"></u--input>
-					</u-form-item>
-				</u--form>
-			</view>
-
-			<u-gap></u-gap>
-
-			<view class="questionnaire-cell">
-				<u--text type="primary" :bold="true" size="16" text="2. 与班级同学整体的亲密度分值(1 - 10)"></u--text>
-
-				<u-slider step="1" min="1" max="10" :showValue="true" v-model="submission.classmateIntimacy"></u-slider>
-			</view>
-
-			<u-gap></u-gap>
-
-			<view class="questionnaire-cell">
-				<u--text type="primary" :bold="true" size="16" text="3. 与舍友整体的亲密度分值(1 - 10)"></u--text>
-
-				<u-slider step="1" min="1" max="10" :showValue="true" v-model="submission.roommateIntimacy"></u-slider>
-			</view>
-
-			<u-gap></u-gap>
-
-			<view class="questionnaire-cell">
-				<u--text type="primary" :bold="true" size="16" text="4. 请列出 1 至 3 位与你最亲密的同学及亲密度分值(1 - 10)"></u--text>
-
-				<view class="questionnaire-friend-cell">
-					<u--form :model="submission" :rules="friendInfoFormRules" ref="friendInfoForm">
-						<view v-for="(friendItem, index) in submission.friendItemList" :key="index" :index="index">
-							<view style="align-content: center;">
-								<u-form-item label="姓名" :required="true" prop="'friendItemList.' + index + '.name'">
-									<u--input prefixIcon="account" placeholder="请输入姓名"
-										v-model="submission.friendItemList[index].name"></u--input>
-								</u-form-item>
-
-								<u-slider step="1" min="1" max="10" :showValue="true"
-									v-model="submission.friendItemList[index].intimacy">
-								</u-slider>
-
-								<u-button v-if="submission.friendItemList.length > 1" type="warning" text="删除"
-									@click="removeFriendItem(index)">
-								</u-button>
-
-								<u-divider></u-divider>
-							</view>
-						</view>
-
-						<u-button v-if="submission.friendItemList.length < 3" type="primary" text="添加"
-							@click="addFriendItem()"></u-button>
+						<u-form-item label="姓名" :required="true" prop="name">
+							<u--input prefixIcon="account" placeholder="请输入姓名" v-model="submission.name"></u--input>
+						</u-form-item>
 					</u--form>
 				</view>
-			</view>
 
-			<u-gap></u-gap>
+				<u-gap></u-gap>
 
-			<view class="questionnaire-cell">
-				<u--text type="primary" :bold="true" size="16" :text="'5. ' + questionContent"></u--text>
+				<view class="questionnaire-cell">
+					<u--text type="primary" :bold="true" size="16" text="2. 与班级同学整体的亲密度分值(1 - 10)"></u--text>
 
-				<u--form :model="submission" :rules="opinionFormRules" ref="opinionForm">
-					<u-form-item prop="opinionItem.attitude">
-						<u-radio-group placement="row" size="20" @change="selectOpinion">
-							<u-radio v-for="(opinion, index) in opinionList" :key="index" :label="opinion.text"
-								:name="opinion.attitude"></u-radio>
-						</u-radio-group>
-					</u-form-item>
-				</u--form>
-			</view>
+					<u-slider step="1" min="1" max="10" :showValue="true" v-model="submission.classmateIntimacy">
+					</u-slider>
+				</view>
 
-			<u-gap></u-gap>
+				<u-gap></u-gap>
 
-			<view class="questionnaire-cell">
-				<u-button type="primary" text="提交" @click="submit()"></u-button>
-			</view>
+				<view class="questionnaire-cell">
+					<u--text type="primary" :bold="true" size="16" text="3. 与舍友整体的亲密度分值(1 - 10)"></u--text>
+
+					<u-slider step="1" min="1" max="10" :showValue="true" v-model="submission.roommateIntimacy">
+					</u-slider>
+				</view>
+
+				<u-gap></u-gap>
+
+				<view class="questionnaire-cell">
+					<u--text type="primary" :bold="true" size="16" text="4. 请列出 1 至 3 位与你最亲密的同学及亲密度分值(1 - 10)">
+					</u--text>
+
+					<view class="questionnaire-friend-cell">
+						<u--form :model="submission" :rules="friendInfoFormRules" ref="friendInfoForm">
+							<view v-for="(friendItem, index) in submission.friendItemList" :key="index" :index="index">
+								<view style="align-content: center;">
+									<u-form-item label="姓名" :required="true" prop="'friendItemList.' + index + '.name'">
+										<u--input prefixIcon="account" placeholder="请输入姓名"
+											v-model="submission.friendItemList[index].name"></u--input>
+									</u-form-item>
+
+									<u-slider step="1" min="1" max="10" :showValue="true"
+										v-model="submission.friendItemList[index].intimacy">
+									</u-slider>
+
+									<u-button v-if="submission.friendItemList.length > 1" type="warning" text="删除"
+										@click="removeFriendItem(index)">
+									</u-button>
+
+									<u-divider></u-divider>
+								</view>
+							</view>
+
+							<u-button v-if="submission.friendItemList.length < 3" type="primary" text="添加"
+								@click="addFriendItem()"></u-button>
+						</u--form>
+					</view>
+				</view>
+
+				<u-gap></u-gap>
+
+				<view class="questionnaire-cell">
+					<u--text type="primary" :bold="true" size="16" :text="'5. 你认为' + questionContent"></u--text>
+
+					<u--form :model="submission" :rules="opinionFormRules" ref="opinionForm">
+						<u-form-item prop="opinionItem.attitude">
+							<u-radio-group placement="row" size="20" @change="selectOpinion">
+								<u-radio v-for="(opinion, index) in opinionList" :key="index" :label="opinion.text"
+									:name="opinion.attitude"></u-radio>
+							</u-radio-group>
+						</u-form-item>
+					</u--form>
+				</view>
+
+				<u-gap></u-gap>
+
+				<view class="questionnaire-cell">
+					<u-button type="primary" text="提交" @click="submit()"></u-button>
+				</view>
+			</u-skeleton>
 
 			<u-toast ref="toast"></u-toast>
 		</view>
@@ -90,11 +96,19 @@
 </template>
 
 <script>
+	import {
+		getQuestionByQuestionId
+	} from '@/api/question'
+	import {
+		submitEssential
+	} from '@/api/questionnaire'
+	import StatusCode from '@/common/statusCode'
+
 	export default {
 		data() {
 			return {
+				isLoading: true,
 				questionId: 1,
-				questionPhase: 0,
 				questionContent: '',
 				opinionList: [{
 					attitude: 0,
@@ -116,7 +130,6 @@
 						questionId: null,
 						attitude: null,
 						opinion: null,
-						phase: null
 					}
 				},
 				basicInfoFormRules: {
@@ -153,8 +166,23 @@
 		},
 		onShow() {
 			this.submission.opinionItem.questionId = this.questionId
-			this.submission.opinionItem.phase = 0
-			// TODO 加载问题
+
+			getQuestionByQuestionId(this.questionId).then(res => {
+				if (res.data.status === StatusCode.SUCCESS) {
+					this.questionContent = res.data.data.content
+					this.isLoading = false
+				} else {
+					this.showToast({
+						message: res.data.message,
+						type: 'error'
+					})
+				}
+			}).catch(error => {
+				this.showToast({
+					message: error,
+					type: 'error'
+				})
+			})
 		},
 		methods: {
 			addFriendItem() {
@@ -171,10 +199,10 @@
 			},
 			submit() {
 				this.$refs.basicInfoForm.validate().then(res => {
-					let submission = this.submission
+					const submission = this.submission
 
 					for (let i = 0; i < submission.friendItemList.length; i++) {
-						let friendItem = submission.friendItemList[i]
+						const friendItem = submission.friendItemList[i]
 
 						if (typeof friendItem.name != 'string' || friendItem.name.trim().length == 0) {
 							this.showToast({
@@ -204,7 +232,33 @@
 						return
 					}
 
-					console.error(JSON.stringify(submission))
+					this.showToast({
+						message: '提交中',
+						type: 'loading'
+					})
+
+					submitEssential(this.submission).then(res => {
+						if (res.data.status === StatusCode.SUCCESS) {
+							this.showToast({
+								message: '提交成功',
+								type: 'success'
+							})
+
+							uni.navigateTo({
+								url: '/pages/success/success'
+							})
+						} else {
+							this.showToast({
+								message: res.data.message,
+								type: 'error'
+							})
+						}
+					}).catch(error => {
+						this.showToast({
+							message: error,
+							type: 'error'
+						})
+					})
 				}).catch(errors => {
 					this.showToast({
 						message: errors[0].message,
