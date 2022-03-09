@@ -5,7 +5,7 @@
 
 			<u-gap></u-gap>
 
-			<u--text align="center" text="你的问卷已经提交成功，感谢你的参与～"></u--text>
+			<u--text align="center" text="您的问卷已经提交成功，感谢您的参与！"></u--text>
 		</view>
 	</view>
 </template>
