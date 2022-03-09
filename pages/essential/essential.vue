@@ -38,7 +38,7 @@
 				<u-gap></u-gap>
 
 				<view class="questionnaire-cell">
-					<u--text type="primary" :bold="true" size="16" text="4. 请列出 1 至 3 位与你最亲密的同学及亲密度分值(1 - 10)">
+					<u--text type="primary" :bold="true" size="16" text="4. 请列出 1 至 3 位与您最亲密的同学及亲密度分值(1 - 10)">
 					</u--text>
 
 					<view class="questionnaire-friend-cell">
@@ -71,7 +71,7 @@
 				<u-gap></u-gap>
 
 				<view class="questionnaire-cell">
-					<u--text type="primary" :bold="true" size="16" :text="'5. 你认为' + questionContent"></u--text>
+					<u--text type="primary" :bold="true" size="16" :text="'5. ' + questionContent"></u--text>
 
 					<u--form :model="submission" :rules="opinionFormRules" ref="opinionForm">
 						<u-form-item prop="opinionItem.attitude">
