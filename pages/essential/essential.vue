@@ -10,10 +10,6 @@
 							<u--input prefixIcon="account" placeholder="请输入学号" v-model="submission.studentId">
 							</u--input>
 						</u-form-item>
-
-						<u-form-item label="姓名" :required="true" prop="name">
-							<u--input prefixIcon="account" placeholder="请输入姓名" v-model="submission.name"></u--input>
-						</u-form-item>
 					</u--form>
 				</view>
 
@@ -119,7 +115,6 @@
 				}],
 				submission: {
 					studentId: null,
-					name: null,
 					classmateIntimacy: 5,
 					roommateIntimacy: 5,
 					friendItemList: [{
