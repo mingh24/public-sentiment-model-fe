@@ -18,8 +18,18 @@
 				<view class="questionnaire-cell">
 					<u--text type="primary" :bold="true" size="16" text="2. 与班级同学整体的亲密度分值(1 - 10)"></u--text>
 
-					<u-slider step="1" min="1" max="10" :showValue="true" v-model="submission.classmateIntimacy">
-					</u-slider>
+					<u-row justify="space-between" gutter="10">
+						<u-col span="11">
+							<el-slider :step="1" :min="1" :max="10" :show-tooltip="false" show-stops
+								v-model="submission.classmateIntimacy">
+							</el-slider>
+						</u-col>
+
+						<u-col span="1">
+							<u--text type="primary" :bold="true" size="16" :text="submission.classmateIntimacy">
+							</u--text>
+						</u-col>
+					</u-row>
 				</view>
 
 				<u-gap></u-gap>
@@ -27,8 +37,18 @@
 				<view class="questionnaire-cell">
 					<u--text type="primary" :bold="true" size="16" text="3. 与舍友整体的亲密度分值(1 - 10)"></u--text>
 
-					<u-slider step="1" min="1" max="10" :showValue="true" v-model="submission.roommateIntimacy">
-					</u-slider>
+					<u-row justify="space-between" gutter="10">
+						<u-col span="11">
+							<el-slider :step="1" :min="1" :max="10" :show-tooltip="false" show-stops
+								v-model="submission.roommateIntimacy">
+							</el-slider>
+						</u-col>
+
+						<u-col span="1">
+							<u--text type="primary" :bold="true" size="16" :text="submission.roommateIntimacy">
+							</u--text>
+						</u-col>
+					</u-row>
 				</view>
 
 				<u-gap></u-gap>
@@ -46,9 +66,18 @@
 											v-model="submission.friendItemList[index].name"></u--input>
 									</u-form-item>
 
-									<u-slider step="1" min="1" max="10" :showValue="true"
-										v-model="submission.friendItemList[index].intimacy">
-									</u-slider>
+									<u-row justify="space-between" gutter="10">
+										<u-col span="11">
+											<el-slider :step="1" :min="1" :max="10" :show-tooltip="false" show-stops
+												v-model="submission.friendItemList[index].intimacy"></el-slider>
+										</u-col>
+
+										<u-col span="1">
+											<u--text type="primary" :bold="true" size="16"
+												:text="submission.friendItemList[index].intimacy">
+											</u--text>
+										</u-col>
+									</u-row>
 
 									<u-button v-if="submission.friendItemList.length > 1" type="warning" text="删除"
 										@click="removeFriendItem(index)">
@@ -69,14 +98,17 @@
 				<view class="questionnaire-cell">
 					<u--text type="primary" :bold="true" size="16" :text="'5. ' + questionContent"></u--text>
 
-					<u--form :model="submission" :rules="opinionFormRules" ref="opinionForm">
-						<u-form-item prop="opinionItem.attitude">
-							<u-radio-group placement="row" size="20" @change="selectOpinion">
-								<u-radio v-for="(opinion, index) in opinionList" :key="index" :label="opinion.text"
-									:name="opinion.attitude"></u-radio>
-							</u-radio-group>
-						</u-form-item>
-					</u--form>
+					<u-row justify="space-between" gutter="10">
+						<u-col span="11">
+							<el-slider :step="1" :min="0" :max="10" :marks="opinionMarks" :show-tooltip="false"
+								show-stops v-model="submission.opinionItem.attitude"></el-slider>
+						</u-col>
+
+						<u-col span="1">
+							<u--text type="primary" :bold="true" size="16" :text="submission.opinionItem.attitude">
+							</u--text>
+						</u-col>
+					</u-row>
 				</view>
 
 				<u-gap></u-gap>
@@ -106,13 +138,38 @@
 				isLoading: true,
 				questionId: 1,
 				questionContent: '',
-				opinionList: [{
-					attitude: 0,
-					text: '有利于'
-				}, {
-					attitude: 1,
-					text: '不利于'
-				}],
+				opinionMarks: {
+					0: {
+						label: '非常不同意',
+						style: {
+							fontSize: '20rpx'
+						}
+					},
+					3: {
+						label: '比较不同意',
+						style: {
+							fontSize: '20rpx'
+						}
+					},
+					5: {
+						label: '一般',
+						style: {
+							fontSize: '20rpx'
+						}
+					},
+					7: {
+						label: '比较同意',
+						style: {
+							fontSize: '20rpx'
+						}
+					},
+					10: {
+						label: '非常同意',
+						style: {
+							fontSize: '20rpx'
+						}
+					}
+				},
 				submission: {
 					studentId: null,
 					classmateIntimacy: 5,
@@ -123,7 +180,7 @@
 					}],
 					opinionItem: {
 						questionId: null,
-						attitude: null,
+						attitude: 5,
 						opinion: null,
 					}
 				},
@@ -218,9 +275,10 @@
 						}
 					}
 
-					if (!(submission.opinionItem.attitude === 0 || submission.opinionItem.attitude === 1)) {
+					if (parseInt(this.submission.opinionItem.attitude) < 0 || parseInt(this.submission.opinionItem
+							.attitude) > 10) {
 						this.showToast({
-							message: '请选择观点',
+							message: `观点支持度值不合法：${this.submission.opinionItem.attitude}`,
 							type: 'error'
 						})
 
@@ -297,5 +355,10 @@
 	.questionnaire .questionnaire-cell .u-radio {
 		margin-top: 10rpx;
 		margin-right: auto;
+	}
+
+	.questionnaire-cell .el-slider {
+		padding: 20rpx;
+		word-break: keep-all;
 	}
 </style>
