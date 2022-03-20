@@ -1,9 +1,11 @@
 // #ifndef VUE3
 import Vue from 'vue'
 import App from './App'
-import uView from "uview-ui";
+import uView from "uview-ui"
+import element from './components/element.js'
 
-Vue.use(uView);
+Vue.use(uView)
+Vue.use(element)
 
 Vue.config.productionTip = false
 
