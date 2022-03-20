@@ -59,6 +59,11 @@
         "title" : "TBD问卷",
         "router" : {
             "mode" : "history"
+        },
+        "optimization" : {
+            "treeShaking" : {
+                "enable" : true
+            }
         }
     }
 }
