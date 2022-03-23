@@ -1,122 +1,145 @@
 <template>
 	<view class="container">
-		<view class="questionnaire">
-			<u-skeleton rows="20" :loading="isLoading">
-				<view class="questionnaire-cell">
-					<u--text type="primary" :bold="true" size="16" text="1. 基本信息"></u--text>
+		<u-skeleton rows="25" :loading="isLoading"> </u-skeleton>
 
-					<u--form :model="submission" :rules="basicInfoFormRules" ref="basicInfoForm">
-						<u-form-item label="学号" :required="true" prop="studentId">
-							<u--input prefixIcon="account" placeholder="请输入学号" v-model="submission.studentId">
-							</u--input>
-						</u-form-item>
+		<view v-if="!isLoading" class="questionnaire">
+			<view class="questionnaire-cell">
+				<u--text type="primary" :bold="true" size="16" text="1. 基本信息"></u--text>
+
+				<u--form :model="submission" :rules="basicInfoFormRules" ref="basicInfoForm">
+					<u-form-item label="学号" :required="true" prop="studentId">
+						<u--input prefixIcon="account" placeholder="请输入学号" v-model="submission.studentId">
+						</u--input>
+					</u-form-item>
+				</u--form>
+			</view>
+
+			<u-gap></u-gap>
+
+			<view class="questionnaire-cell">
+				<u--text type="primary" :bold="true" size="16" text="2. 与班级同学整体的亲密度分值(1 - 10)"></u--text>
+
+				<u-row justify="space-between" gutter="10">
+					<u-col span="11">
+						<el-slider :step="1" :min="1" :max="10" :show-tooltip="false" show-stops
+							v-model="submission.classmateIntimacy">
+						</el-slider>
+					</u-col>
+
+					<u-col span="1">
+						<u--text type="primary" :bold="true" size="16" :text="submission.classmateIntimacy">
+						</u--text>
+					</u-col>
+				</u-row>
+			</view>
+
+			<u-gap></u-gap>
+
+			<view class="questionnaire-cell">
+				<u--text type="primary" :bold="true" size="16" text="3. 与舍友整体的亲密度分值(1 - 10)"></u--text>
+
+				<u-row justify="space-between" gutter="10">
+					<u-col span="11">
+						<el-slider :step="1" :min="1" :max="10" :show-tooltip="false" show-stops
+							v-model="submission.roommateIntimacy">
+						</el-slider>
+					</u-col>
+
+					<u-col span="1">
+						<u--text type="primary" :bold="true" size="16" :text="submission.roommateIntimacy">
+						</u--text>
+					</u-col>
+				</u-row>
+			</view>
+
+			<u-gap></u-gap>
+
+			<view class="questionnaire-cell">
+				<u--text type="primary" :bold="true" size="16" text="4. 请列出 1 至 3 位与您最亲密的同学及亲密度分值(1 - 10)">
+				</u--text>
+
+				<view class="questionnaire-friend-cell">
+					<u--form :model="submission" :rules="friendInfoFormRules" ref="friendInfoForm">
+						<view v-for="(friendItem, index) in submission.friendItemList" :key="index" :index="index">
+							<view style="align-content: center;">
+								<u-form-item label="姓名" :required="true" prop="'friendItemList.' + index + '.name'">
+									<u--input prefixIcon="account" placeholder="请输入姓名"
+										v-model="submission.friendItemList[index].name"></u--input>
+								</u-form-item>
+
+								<u-row justify="space-between" gutter="10">
+									<u-col span="11">
+										<el-slider :step="1" :min="1" :max="10" :show-tooltip="false" show-stops
+											v-model="submission.friendItemList[index].intimacy"></el-slider>
+									</u-col>
+
+									<u-col span="1">
+										<u--text type="primary" :bold="true" size="16"
+											:text="submission.friendItemList[index].intimacy">
+										</u--text>
+									</u-col>
+								</u-row>
+
+								<u-button v-if="submission.friendItemList.length > 1" type="warning" text="删除"
+									@click="removeFriendItem(index)">
+								</u-button>
+
+								<u-divider></u-divider>
+							</view>
+						</view>
+
+						<u-button v-if="submission.friendItemList.length < 3" type="primary" text="添加"
+							@click="addFriendItem()"></u-button>
 					</u--form>
 				</view>
+			</view>
 
-				<u-gap></u-gap>
+			<u-gap></u-gap>
 
-				<view class="questionnaire-cell">
-					<u--text type="primary" :bold="true" size="16" text="2. 与班级同学整体的亲密度分值(1 - 10)"></u--text>
+			<view class="questionnaire-cell">
+				<u--text type="primary" :bold="true" size="16" :text="'5. ' + basicQuestion.content"></u--text>
 
-					<u-row justify="space-between" gutter="10">
-						<u-col span="11">
-							<el-slider :step="1" :min="1" :max="10" :show-tooltip="false" show-stops
-								v-model="submission.classmateIntimacy">
-							</el-slider>
-						</u-col>
+				<u-row justify="space-between" gutter="10">
+					<u-col span="11">
+						<el-slider :step="1" :min="basicQuestion.option.min" :max="basicQuestion.option.max"
+							:marks="basicQuestion.option.marks" :show-tooltip="false" show-stops
+							v-model="submission.opinionItem.attitude"></el-slider>
+					</u-col>
 
-						<u-col span="1">
-							<u--text type="primary" :bold="true" size="16" :text="submission.classmateIntimacy">
-							</u--text>
-						</u-col>
-					</u-row>
-				</view>
+					<u-col span="1">
+						<u--text type="primary" :bold="true" size="16" :text="submission.opinionItem.attitude">
+						</u--text>
+					</u-col>
+				</u-row>
+			</view>
 
-				<u-gap></u-gap>
+			<u-gap></u-gap>
 
-				<view class="questionnaire-cell">
-					<u--text type="primary" :bold="true" size="16" text="3. 与舍友整体的亲密度分值(1 - 10)"></u--text>
+			<view v-if="shouldShowFurtherQuestion" class="questionnaire-cell">
+				<u--text type="primary" :bold="true" size="16" :text="'6. ' + priceQuestion.content"></u--text>
 
-					<u-row justify="space-between" gutter="10">
-						<u-col span="11">
-							<el-slider :step="1" :min="1" :max="10" :show-tooltip="false" show-stops
-								v-model="submission.roommateIntimacy">
-							</el-slider>
-						</u-col>
+				<u-radio-group placement="column" activeColor="#3c9cff" @change="selectPriceOpinion">
+					<u-radio v-for="(option, index) in priceQuestion.option" :key="option.optionKey"
+						:label="option.optionKey + '. ' + option.optionValue" :name="option.optionKey"></u-radio>
+				</u-radio-group>
+			</view>
 
-						<u-col span="1">
-							<u--text type="primary" :bold="true" size="16" :text="submission.roommateIntimacy">
-							</u--text>
-						</u-col>
-					</u-row>
-				</view>
+			<u-gap></u-gap>
 
-				<u-gap></u-gap>
+			<view v-if="shouldShowFurtherQuestion" class="questionnaire-cell">
+				<u--text type="primary" :bold="true" size="16" :text="'7. ' + lengthQuestion.content"></u--text>
 
-				<view class="questionnaire-cell">
-					<u--text type="primary" :bold="true" size="16" text="4. 请列出 1 至 3 位与您最亲密的同学及亲密度分值(1 - 10)">
-					</u--text>
+				<u-radio-group placement="column" activeColor="#3c9cff" @change="selectLengthOpinion">
+					<u-radio v-for="(option, index) in lengthQuestion.option" :key="option.optionKey"
+						:label="option.optionKey + '. ' + option.optionValue" :name="option.optionKey"></u-radio>
+				</u-radio-group>
+			</view>
 
-					<view class="questionnaire-friend-cell">
-						<u--form :model="submission" :rules="friendInfoFormRules" ref="friendInfoForm">
-							<view v-for="(friendItem, index) in submission.friendItemList" :key="index" :index="index">
-								<view style="align-content: center;">
-									<u-form-item label="姓名" :required="true" prop="'friendItemList.' + index + '.name'">
-										<u--input prefixIcon="account" placeholder="请输入姓名"
-											v-model="submission.friendItemList[index].name"></u--input>
-									</u-form-item>
+			<u-gap></u-gap>
 
-									<u-row justify="space-between" gutter="10">
-										<u-col span="11">
-											<el-slider :step="1" :min="1" :max="10" :show-tooltip="false" show-stops
-												v-model="submission.friendItemList[index].intimacy"></el-slider>
-										</u-col>
-
-										<u-col span="1">
-											<u--text type="primary" :bold="true" size="16"
-												:text="submission.friendItemList[index].intimacy">
-											</u--text>
-										</u-col>
-									</u-row>
-
-									<u-button v-if="submission.friendItemList.length > 1" type="warning" text="删除"
-										@click="removeFriendItem(index)">
-									</u-button>
-
-									<u-divider></u-divider>
-								</view>
-							</view>
-
-							<u-button v-if="submission.friendItemList.length < 3" type="primary" text="添加"
-								@click="addFriendItem()"></u-button>
-						</u--form>
-					</view>
-				</view>
-
-				<u-gap></u-gap>
-
-				<view class="questionnaire-cell">
-					<u--text type="primary" :bold="true" size="16" :text="'5. ' + questionContent"></u--text>
-
-					<u-row justify="space-between" gutter="10">
-						<u-col span="11">
-							<el-slider :step="1" :min="0" :max="10" :marks="opinionMarks" :show-tooltip="false"
-								show-stops v-model="submission.opinionItem.attitude"></el-slider>
-						</u-col>
-
-						<u-col span="1">
-							<u--text type="primary" :bold="true" size="16" :text="submission.opinionItem.attitude">
-							</u--text>
-						</u-col>
-					</u-row>
-				</view>
-
-				<u-gap></u-gap>
-
-				<view class="questionnaire-cell">
-					<u-button type="primary" text="提交" @click="submit()"></u-button>
-				</view>
-			</u-skeleton>
+			<view class="questionnaire-cell">
+				<u-button type="primary" text="提交" @click="submit()"></u-button>
+			</view>
 
 			<u-toast ref="toast"></u-toast>
 		</view>
@@ -137,39 +160,9 @@
 			return {
 				isLoading: true,
 				questionId: 1,
-				questionContent: '',
-				opinionMarks: {
-					0: {
-						label: '非常不同意',
-						style: {
-							fontSize: '20rpx'
-						}
-					},
-					3: {
-						label: '比较不同意',
-						style: {
-							fontSize: '20rpx'
-						}
-					},
-					5: {
-						label: '一般',
-						style: {
-							fontSize: '20rpx'
-						}
-					},
-					7: {
-						label: '比较同意',
-						style: {
-							fontSize: '20rpx'
-						}
-					},
-					10: {
-						label: '非常同意',
-						style: {
-							fontSize: '20rpx'
-						}
-					}
-				},
+				basicQuestion: null,
+				priceQuestion: null,
+				lengthQuestion: null,
 				submission: {
 					studentId: null,
 					classmateIntimacy: 5,
@@ -181,6 +174,8 @@
 					opinionItem: {
 						questionId: null,
 						attitude: 5,
+						priceOption: null,
+						lengthOption: null,
 						opinion: null,
 					}
 				},
@@ -212,8 +207,13 @@
 						trigger: ['blur', 'change'],
 					}]
 				},
-				friendInfoFormRules: {},
-				opinionFormRules: {}
+				friendInfoFormRules: {}
+			}
+		},
+		computed: {
+			shouldShowFurtherQuestion() {
+				let attitudeThreshold = (this.basicQuestion.option.min + this.basicQuestion.option.max) / 2
+				return this.submission.opinionItem.attitude > attitudeThreshold
 			}
 		},
 		onShow() {
@@ -221,7 +221,14 @@
 
 			getQuestionByQuestionId(this.questionId).then(res => {
 				if (res.data.status === StatusCode.SUCCESS) {
-					this.questionContent = res.data.data.content
+					let questionContent = JSON.parse(res.data.data.content)
+					questionContent.basicQuestion.option.marks = JSON.parse(questionContent.basicQuestion.option
+						.marks)
+
+					this.basicQuestion = questionContent.basicQuestion
+					this.priceQuestion = questionContent.priceQuestion
+					this.lengthQuestion = questionContent.lengthQuestion
+
 					this.isLoading = false
 				} else {
 					this.showToast({
@@ -246,8 +253,11 @@
 			removeFriendItem(index) {
 				this.submission.friendItemList.splice(index, 1)
 			},
-			selectOpinion(name) {
-				this.submission.opinionItem.attitude = name
+			selectPriceOpinion(name) {
+				this.submission.opinionItem.priceOption = name
+			},
+			selectLengthOpinion(name) {
+				this.submission.opinionItem.lengthOption = name
 			},
 			submit() {
 				this.$refs.basicInfoForm.validate().then(res => {
@@ -353,8 +363,7 @@
 	}
 
 	.questionnaire .questionnaire-cell .u-radio {
-		margin-top: 10rpx;
-		margin-right: auto;
+		margin: 10rpx;
 	}
 
 	.questionnaire-cell .el-slider {
