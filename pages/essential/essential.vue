@@ -115,22 +115,22 @@
 
 			<u-gap></u-gap>
 
-			<view v-if="shouldShowFurtherQuestion" class="questionnaire-cell">
+			<view v-if="shouldShowPriceQuestion" class="questionnaire-cell">
 				<u--text type="primary" :bold="true" size="16" :text="'6. ' + priceQuestion.content"></u--text>
 
 				<u-radio-group placement="column" activeColor="#3c9cff" @change="selectPriceOpinion">
-					<u-radio v-for="(option, index) in priceQuestion.option" :key="option.optionKey"
+					<u-radio v-for="option in priceQuestion.option" :key="option.optionKey"
 						:label="option.optionKey + '. ' + option.optionValue" :name="option.optionKey"></u-radio>
 				</u-radio-group>
 			</view>
 
 			<u-gap></u-gap>
 
-			<view v-if="shouldShowFurtherQuestion" class="questionnaire-cell">
+			<view v-if="shouldShowLengthQuestion" class="questionnaire-cell">
 				<u--text type="primary" :bold="true" size="16" :text="'7. ' + lengthQuestion.content"></u--text>
 
 				<u-radio-group placement="column" activeColor="#3c9cff" @change="selectLengthOpinion">
-					<u-radio v-for="(option, index) in lengthQuestion.option" :key="option.optionKey"
+					<u-radio v-for="option in lengthQuestion.option" :key="option.optionKey"
 						:label="option.optionKey + '. ' + option.optionValue" :name="option.optionKey"></u-radio>
 				</u-radio-group>
 			</view>
@@ -140,9 +140,9 @@
 			<view class="questionnaire-cell">
 				<u-button type="primary" text="提交" @click="submit()"></u-button>
 			</view>
-
-			<u-toast ref="toast"></u-toast>
 		</view>
+
+		<u-toast ref="toast"></u-toast>
 	</view>
 </template>
 
@@ -159,10 +159,21 @@
 		data() {
 			return {
 				isLoading: true,
-				questionId: 1,
-				basicQuestion: null,
-				priceQuestion: null,
-				lengthQuestion: null,
+				questionId: 4,
+				basicQuestion: {
+					content: null,
+					option: null,
+				},
+				priceQuestion: {
+					attitudeThreshold: null,
+					content: null,
+					option: null,
+				},
+				lengthQuestion: {
+					attitudeThreshold: null,
+					content: null,
+					option: null,
+				},
 				submission: {
 					studentId: null,
 					classmateIntimacy: 5,
@@ -174,8 +185,8 @@
 					opinionItem: {
 						questionId: null,
 						attitude: 5,
-						priceOption: null,
-						lengthOption: null,
+						priceOptionKey: null,
+						lengthOptionKey: null,
 						opinion: null,
 					}
 				},
@@ -211,9 +222,23 @@
 			}
 		},
 		computed: {
-			shouldShowFurtherQuestion() {
-				let attitudeThreshold = (this.basicQuestion.option.min + this.basicQuestion.option.max) / 2
-				return this.submission.opinionItem.attitude > attitudeThreshold
+			shouldShowPriceQuestion() {
+				return parseInt(this.submission.opinionItem.attitude) > parseInt(this.priceQuestion.attitudeThreshold)
+			},
+			shouldShowLengthQuestion() {
+				return parseInt(this.submission.opinionItem.attitude) > parseInt(this.lengthQuestion.attitudeThreshold)
+			}
+		},
+		watch: {
+			shouldShowPriceQuestion: function(val, oldVal) {
+				if (val === false) {
+					this.submission.opinionItem.priceOptionKey = null
+				}
+			},
+			shouldShowLengthQuestion: function(val, oldVal) {
+				if (val === false) {
+					this.submission.opinionItem.lengthOptionKey = null
+				}
 			}
 		},
 		onShow() {
@@ -254,10 +279,19 @@
 				this.submission.friendItemList.splice(index, 1)
 			},
 			selectPriceOpinion(name) {
-				this.submission.opinionItem.priceOption = name
+				this.submission.opinionItem.priceOptionKey = name
 			},
 			selectLengthOpinion(name) {
-				this.submission.opinionItem.lengthOption = name
+				this.submission.opinionItem.lengthOptionKey = name
+			},
+			checkOptionKeyExists(optionList, optionKey) {
+				for (let i = 0; i < optionList.length; i++) {
+					if (optionList[i].optionKey === optionKey) {
+						return true
+					}
+				}
+
+				return false
 			},
 			submit() {
 				this.$refs.basicInfoForm.validate().then(res => {
@@ -285,14 +319,38 @@
 						}
 					}
 
-					if (parseInt(this.submission.opinionItem.attitude) < 0 || parseInt(this.submission.opinionItem
-							.attitude) > 10) {
+					if (parseInt(submission.opinionItem.attitude) < parseInt(this.basicQuestion.option.min) ||
+						parseInt(submission.opinionItem.attitude) > parseInt(this.basicQuestion.option.max)) {
 						this.showToast({
-							message: `观点支持度值不合法：${this.submission.opinionItem.attitude}`,
+							message: `观点支持度值不合法：${submission.opinionItem.attitude}`,
 							type: 'error'
 						})
 
 						return
+					}
+
+					if (this.shouldShowPriceQuestion) {
+						if (!this.checkOptionKeyExists(this.priceQuestion.option, submission.opinionItem
+								.priceOptionKey)) {
+							this.showToast({
+								message: `价格选项不合法：${submission.opinionItem.priceOptionKey}`,
+								type: 'error'
+							})
+
+							return
+						}
+					}
+
+					if (this.shouldShowLengthQuestion) {
+						if (!this.checkOptionKeyExists(this.lengthQuestion.option, submission.opinionItem
+								.lengthOptionKey)) {
+							this.showToast({
+								message: `时长选项不合法：${submission.opinionItem.lengthOptionKey}`,
+								type: 'error'
+							})
+
+							return
+						}
 					}
 
 					this.showToast({
@@ -323,10 +381,17 @@
 						})
 					})
 				}).catch(errors => {
-					this.showToast({
-						message: errors[0].message,
-						type: 'error'
-					})
+					if (errors.length > 0) {
+						this.showToast({
+							message: errors[0].message,
+							type: 'error'
+						})
+					} else {
+						this.showToast({
+							message: errors,
+							type: 'error'
+						})
+					}
 				})
 			},
 			showToast(params) {
