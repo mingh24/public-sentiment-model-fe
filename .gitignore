@@ -1,5 +1,5 @@
-.DS_Store
-.history/
-node_modules/
-uni_modules/
-unpackage/
+**/.DS_Store
+**/.history/
+**/node_modules/
+**/uni_modules/
+**/unpackage/
