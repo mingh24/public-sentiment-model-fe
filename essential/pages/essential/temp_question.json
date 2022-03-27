@@ -1,0 +1,41 @@
+{
+	"basicQuestion": {
+		"content": "您对深度辅导（辅导员一对一沟通30分钟以上）有利于个人成长这一观点的支持程度为多少？(0 - 10)",
+		"option": {
+			"min": 0,
+			"max": 10,
+			"marks": "{\"0\":{\"label\":\"非常不同意\",\"style\":{\"fontSize\":\"20rpx\"}},\"3\":{\"label\":\"比较不同意\",\"style\":{\"fontSize\":\"20rpx\"}},\"5\":{\"label\":\"一般\",\"style\":{\"fontSize\":\"20rpx\"}},\"7\":{\"label\":\"比较同意\",\"style\":{\"fontSize\":\"20rpx\"}},\"10\":{\"label\":\"非常同意\",\"style\":{\"fontSize\":\"20rpx\"}}}"
+		}
+	},
+	"priceQuestion": {
+		"attitudeThreshold": 5,
+		"content": "您认为深度辅导价钱多少最为合适？",
+		"option": [{
+			"optionKey": "A",
+			"optionValue": "15-30元/小时"
+		}, {
+			"optionKey": "B",
+			"optionValue": "50-100元/小时"
+		}, {
+			"optionKey": "C",
+			"optionValue": "100-200元/小时"
+		}, {
+			"optionKey": "D",
+			"optionValue": "200元以上/小时"
+		}]
+	},
+	"lengthQuestion": {
+		"attitudeThreshold": 5,
+		"content": "您认为深度辅导时长多久最为合适？",
+		"option": [{
+			"optionKey": "A",
+			"optionValue": "0.5小时"
+		}, {
+			"optionKey": "B",
+			"optionValue": "1-2小时"
+		}, {
+			"optionKey": "C",
+			"optionValue": "2小时以上"
+		}]
+	}
+}

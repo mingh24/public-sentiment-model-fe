@@ -3,13 +3,6 @@
 		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
 	},
 	"pages": [{
-		"path": "pages/index/index",
-		"style": {
-			"navigationBarTitleText": "TBD问卷",
-			"enablePullDownRefresh": false
-		}
-
-	}, {
 		"path": "pages/essential/essential",
 		"style": {
 			"navigationBarTitleText": "TBD问卷",
