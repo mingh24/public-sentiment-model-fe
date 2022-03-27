@@ -2,6 +2,10 @@
 	<view class="container">
 		<u-skeleton rows="25" :loading="isLoading"> </u-skeleton>
 
+		<u-modal :show="shouldShowStatement" @confirm="confirmStatement">
+			<rich-text :nodes="statement"></rich-text>
+		</u-modal>
+
 		<view v-if="!isLoading" class="questionnaire">
 			<view class="questionnaire-cell">
 				<u--text type="primary" :bold="true" size="16" text="1. 基本信息"></u--text>
@@ -159,6 +163,21 @@
 		data() {
 			return {
 				isLoading: true,
+				shouldShowStatement: false,
+				statement: `
+				<p style="line-height: 2em;">
+				    亲爱的同学：<br/>
+				</p>
+				<p style="text-indent: 2em; line-height: 2em;">
+				    您好！本次调查旨在更好地了解学生成长，以便更好地为您提供服务。学院组织本次调研活动，填写时请根据您的实际情况选择，谢谢您的支持与配合！对您填答的信息，本调研将严格遵循《中华人民共和国统计法》予以保密。感谢您参与本次调查！<br/>
+				</p>
+				<p style="text-indent: 2em; text-align: right; line-height: 2em;">
+				    詹天佑学院学生工作办公室<br/>
+				</p>
+				<p style="text-indent: 2em; text-align: right; line-height: 2em;">
+				    2022年3月9日
+				</p>
+				`,
 				questionId: 1,
 				basicQuestion: {
 					content: null,
@@ -255,6 +274,7 @@
 					this.lengthQuestion = questionContent.lengthQuestion
 
 					this.isLoading = false
+					this.shouldShowStatement = true
 				} else {
 					this.showToast({
 						message: res.data.message,
@@ -269,6 +289,9 @@
 			})
 		},
 		methods: {
+			confirmStatement() {
+				this.shouldShowStatement = false
+			},
 			addFriendItem() {
 				this.submission.friendItemList.push({
 					name: '',
