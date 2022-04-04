@@ -5,14 +5,14 @@
 	"pages": [{
 		"path": "pages/advanced1/advanced1",
 		"style": {
-			"navigationBarTitleText": "TBD问卷",
+			"navigationBarTitleText": "TBD第2阶段问卷",
 			"enablePullDownRefresh": false,
 			"disableSwipeBack": true
 		}
 	}, {
 		"path": "pages/success/success",
 		"style": {
-			"navigationBarTitleText": "TBD问卷",
+			"navigationBarTitleText": "TBD第2阶段问卷",
 			"enablePullDownRefresh": false
 		}
 	}],
