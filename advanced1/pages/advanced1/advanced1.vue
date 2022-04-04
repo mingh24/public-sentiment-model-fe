@@ -537,8 +537,9 @@
 	.questionnaire .questionnaire-cell {}
 
 	.questionnaire .questionnaire-cell .opinion-dist-cell {
-		margin-top: 20rpx;
+		margin-top: 10rpx;
 		margin-bottom: 10rpx;
+		padding: 20rpx;
 	}
 
 	.questionnaire .questionnaire-cell .opinion-dist-cell .u-button {
