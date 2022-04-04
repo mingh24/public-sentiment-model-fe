@@ -1,0 +1,28 @@
+{
+	"easycom": {
+		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+	},
+	"pages": [{
+		"path": "pages/advanced1/advanced1",
+		"style": {
+			"navigationBarTitleText": "TBD问卷",
+			"enablePullDownRefresh": false,
+			"disableSwipeBack": true
+		}
+	}, {
+		"path": "pages/success/success",
+		"style": {
+			"navigationBarTitleText": "TBD问卷",
+			"enablePullDownRefresh": false
+		}
+	}],
+	"globalStyle": {
+		"navigationBarTextStyle": "black",
+		"navigationBarTitleText": "uni-app",
+		"navigationBarBackgroundColor": "#FFFFFF",
+		"backgroundColor": "#FFFFFF",
+		"app-plus": {
+			"background": "#FFFFFF"
+		}
+	}
+}
