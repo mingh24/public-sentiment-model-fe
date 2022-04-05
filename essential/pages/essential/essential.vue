@@ -406,13 +406,13 @@ export default {
         this.shouldShowStatement = true
       } else {
         this.showToast({
-          message: res.data.message,
+          message: `加载问题信息失败，${res.data.message}`,
           type: 'error',
         })
       }
     }).catch(error => {
       this.showToast({
-        message: error,
+        message: `加载问题信息失败，${error}`,
         type: 'error',
       })
     })
@@ -520,13 +520,13 @@ export default {
             })
           } else {
             this.showToast({
-              message: res.data.message,
+              message: `提交失败，${res.data.message}`,
               type: 'error',
             })
           }
         }).catch(error => {
           this.showToast({
-            message: error,
+            message: `提交失败，${error}`,
             type: 'error',
           })
         })
