@@ -1,5 +1,5 @@
 import {
-	post
+    post
 } from '@/common/axios'
 
 export const submitAdvanced = submission => post('/questionnaire/advanced', submission)

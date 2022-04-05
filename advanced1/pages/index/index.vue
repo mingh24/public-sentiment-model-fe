@@ -1,21 +1,19 @@
 <template>
-	<view class="container">
-		<u-empty mode="permission"></u-empty>
-	</view>
+  <view class="container">
+    <u-empty mode="permission"></u-empty>
+  </view>
 </template>
 
 <script>
-	export default {
-		data() {
-			return {
-
-			};
-		}
-	}
+export default {
+  data() {
+    return {};
+  }
+}
 </script>
 
 <style lang="scss">
-	.container {
-		background-color: #FFFFFF;
-	}
+.container {
+  background-color: #FFFFFF;
+}
 </style>
