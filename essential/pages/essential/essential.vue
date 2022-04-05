@@ -396,10 +396,9 @@ export default {
 
     getQuestionByQuestionId(this.questionId).then(res => {
       if (res.data.status === StatusCode.SUCCESS) {
-        let questionContent = JSON.parse(res.data.data.content)
-        questionContent.attitudeQuestion.numberBoundaryQuestion.marks = JSON.parse(questionContent.attitudeQuestion.numberBoundaryQuestion.marks)
-
+        const questionContent = res.data.data.questionContent
         this.attitudeQuestion = questionContent.attitudeQuestion
+        this.attitudeQuestion.numberBoundaryQuestion.marks = JSON.parse(this.attitudeQuestion.numberBoundaryQuestion.marks)
         this.priceQuestion = questionContent.priceQuestion
         this.lengthQuestion = questionContent.lengthQuestion
 
