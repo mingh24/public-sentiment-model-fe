@@ -179,7 +179,7 @@
             @change="selectLengthOpinion"
         >
           <u-radio
-              v-for="option in lengthQuestion.option"
+              v-for="option in lengthQuestion.optionQuestion.option"
               :key="option.optionKey"
               :label="option.optionKey + '. ' + option.optionValue"
               :name="option.optionKey"
