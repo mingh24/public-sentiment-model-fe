@@ -1,28 +1,31 @@
 {
-	"easycom": {
-		"^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
-	},
-	"pages": [{
-		"path": "pages/essential/essential",
-		"style": {
-			"navigationBarTitleText": "TBD第1阶段问卷",
-			"enablePullDownRefresh": false,
-			"disableSwipeBack": true
-		}
-	}, {
-		"path": "pages/success/success",
-		"style": {
-			"navigationBarTitleText": "TBD第1阶段问卷",
-			"enablePullDownRefresh": false
-		}
-	}],
-	"globalStyle": {
-		"navigationBarTextStyle": "black",
-		"navigationBarTitleText": "uni-app",
-		"navigationBarBackgroundColor": "#FFFFFF",
-		"backgroundColor": "#FFFFFF",
-		"app-plus": {
-			"background": "#FFFFFF"
-		}
-	}
+  "easycom": {
+    "^u-(.*)": "uview-ui/components/u-$1/u-$1.vue"
+  },
+  "pages": [
+    {
+      "path": "pages/essential/essential",
+      "style": {
+        "navigationBarTitleText": "TBD第1阶段问卷",
+        "enablePullDownRefresh": false,
+        "disableSwipeBack": true
+      }
+    },
+    {
+      "path": "pages/success/success",
+      "style": {
+        "navigationBarTitleText": "TBD第1阶段问卷",
+        "enablePullDownRefresh": false
+      }
+    }
+  ],
+  "globalStyle": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#FFFFFF",
+    "app-plus": {
+      "background": "#FFFFFF"
+    }
+  }
 }
