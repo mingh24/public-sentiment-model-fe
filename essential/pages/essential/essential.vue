@@ -453,7 +453,7 @@ export default {
         for (let i = 0; i < submission.friendItemList.length; i++) {
           const friendItem = submission.friendItemList[i]
 
-          if (typeof friendItem.name != 'string' || friendItem.name.trim().length == 0) {
+          if (typeof friendItem.name != 'string' || friendItem.name.trim().length === 0) {
             this.showToast({
               message: `请填写亲密同学的姓名(第${i + 1}位)`,
               type: 'error',
