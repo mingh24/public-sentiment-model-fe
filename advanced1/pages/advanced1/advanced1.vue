@@ -46,7 +46,7 @@
               type="default"
               :bold="true"
               size="14"
-              :text="'2.1 针对“' + attitudeQuestion.numberBoundaryQuestion.content + '”这一问题，上一轮填写中全体同学观点的分布为'"
+              :text="'2.1 针对“' + previousQuestionContent.attitudeQuestion.numberBoundaryQuestion.content + '”这一问题，上一轮填写中全体同学观点的分布为'"
           ></u--text>
 
           <view class="charts-box">
@@ -64,7 +64,7 @@
               type="default"
               :bold="true"
               size="14"
-              :text="'2.2 针对“' + priceQuestion.optionQuestion.content + '”这一问题，上一轮填写中全体同学观点的分布为'"
+              :text="'2.2 针对“' + previousQuestionContent.priceQuestion.optionQuestion.content + '”这一问题，上一轮填写中全体同学观点的分布为'"
           ></u--text>
 
           <view class="charts-box">
@@ -82,7 +82,7 @@
               type="default"
               :bold="true"
               size="14"
-              :text="'2.3 针对“' + lengthQuestion.optionQuestion.content + '”这一问题，上一轮填写中全体同学观点的分布为'"
+              :text="'2.3 针对“' + previousQuestionContent.lengthQuestion.optionQuestion.content + '”这一问题，上一轮填写中全体同学观点的分布为'"
           ></u--text>
 
           <view class="chart-box">
@@ -228,28 +228,8 @@ export default {
 				</p>
 				`,
       questionId: 2,
-      attitudeQuestion: {
-        numberBoundaryQuestion: {
-          content: null,
-          min: null,
-          max: null,
-          marks: null,
-        },
-      },
-      priceQuestion: {
-        attitudeThreshold: null,
-        optionQuestion: {
-          content: null,
-          option: null,
-        },
-      },
-      lengthQuestion: {
-        attitudeThreshold: null,
-        optionQuestion: {
-          content: null,
-          option: null,
-        },
-      },
+      previousQuestionId: 1,
+      previousQuestionContent: null,
       isAttitudeOverallDistLoaded: false,
       attitudeOverallDist: {
         categories: [],
@@ -276,6 +256,28 @@ export default {
             data: [],
           },
         ],
+      },
+      attitudeQuestion: {
+        numberBoundaryQuestion: {
+          content: null,
+          min: null,
+          max: null,
+          marks: null,
+        },
+      },
+      priceQuestion: {
+        attitudeThreshold: null,
+        optionQuestion: {
+          content: null,
+          option: null,
+        },
+      },
+      lengthQuestion: {
+        attitudeThreshold: null,
+        optionQuestion: {
+          content: null,
+          option: null,
+        },
       },
       submission: {
         studentId: null,
@@ -361,10 +363,11 @@ export default {
 
     getQuestionByQuestionId(this.questionId).then(res => {
       if (res.data.status === StatusCode.SUCCESS) {
-        let questionContent = JSON.parse(res.data.data.content)
-        questionContent.attitudeQuestion.numberBoundaryQuestion.marks = JSON.parse(questionContent.attitudeQuestion.numberBoundaryQuestion.marks)
+        this.previousQuestionId = res.data.data.previousQuestionId
 
+        const questionContent = res.data.data.questionContent
         this.attitudeQuestion = questionContent.attitudeQuestion
+        this.attitudeQuestion.numberBoundaryQuestion.marks = JSON.parse(this.attitudeQuestion.numberBoundaryQuestion.marks)
         this.priceQuestion = questionContent.priceQuestion
         this.lengthQuestion = questionContent.lengthQuestion
 
@@ -372,13 +375,13 @@ export default {
         this.shouldShowStatement = true
       } else {
         this.showToast({
-          message: res.data.message,
+          message: `加载问题信息失败，${res.data.message}`,
           type: 'error',
         })
       }
     }).catch(error => {
       this.showToast({
-        message: error,
+        message: `加载问题信息失败，${error}`,
         type: 'error',
       })
     })
@@ -386,15 +389,6 @@ export default {
   methods: {
     confirmStatement() {
       this.shouldShowStatement = false
-    },
-    addFriendItem() {
-      this.submission.friendItemList.push({
-        name: '',
-        intimacy: 5,
-      })
-    },
-    removeFriendItem(index) {
-      this.submission.friendItemList.splice(index, 1)
     },
     selectPriceOpinion(name) {
       this.submission.opinionItem.priceOptionKey = name
@@ -448,9 +442,26 @@ export default {
       return data
     },
     fetchAllOverallDist() {
+      getQuestionByQuestionId(this.previousQuestionId).then(res => {
+        if (res.data.status === StatusCode.SUCCESS) {
+          this.previousQuestionContent = res.data.data.questionContent
+          this.previousQuestionContent.attitudeQuestion.numberBoundaryQuestion.marks = JSON.parse(this.previousQuestionContent.attitudeQuestion.numberBoundaryQuestion.marks)
+        } else {
+          this.showToast({
+            message: `加载上一轮问题信息失败，${res.data.message}`,
+            type: 'error',
+          })
+        }
+      }).catch(error => {
+        this.showToast({
+          message: `加载上一轮问题信息失败，${error}`,
+          type: 'error',
+        })
+      })
+
       this.isAttitudeOverallDistLoaded = true
       this.attitudeOverallDist.series = []
-      getAttitudeOverallDistribution(this.questionId).then(res => {
+      getAttitudeOverallDistribution(this.previousQuestionId).then(res => {
         if (res.data.status === StatusCode.SUCCESS) {
           const rawOverallDist = res.data.data.attitudeOverallDist
           const parsedOverallDist = this.parseAttitudeOverallDist(rawOverallDist)
@@ -468,20 +479,20 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载观点支持度整体分布失败，${res.data.message}`,
+            message: `加载上一轮观点支持度填写结果的整体分布失败，${res.data.message}`,
             type: 'error',
           })
         }
       }).catch(error => {
         this.showToast({
-          message: `加载观点支持度整体分布失败，${error}`,
+          message: `加载上一轮观点支持度填写结果的整体分布失败，${error}`,
           type: 'error',
         })
       })
 
       this.isPriceOptionOverallDistLoaded = true
       this.priceOptionOverallDist.series = []
-      getPriceOptionOverallDistribution(this.questionId).then(res => {
+      getPriceOptionOverallDistribution(this.previousQuestionId).then(res => {
         if (res.data.status === StatusCode.SUCCESS) {
           const rawOverallDist = res.data.data.priceOptionOverallDist
           const parsedOverallDist = this.parsePriceOptionOverallDist(rawOverallDist)
@@ -499,20 +510,20 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载价钱问题观点整体分布失败，${res.data.message}`,
+            message: `加载上一轮价钱问题填写结果的整体分布失败，${res.data.message}`,
             type: 'error',
           })
         }
       }).catch(error => {
         this.showToast({
-          message: `加载价钱问题观点整体分布失败，${error}`,
+          message: `加载上一轮价钱问题填写结果的整体分布失败，${error}`,
           type: 'error',
         })
       })
 
       this.isLengthOptionOverallDistLoaded = true
       this.lengthOptionOverallDist.series = []
-      getLengthOptionOverallDistribution(this.questionId).then(res => {
+      getLengthOptionOverallDistribution(this.previousQuestionId).then(res => {
         if (res.data.status === StatusCode.SUCCESS) {
           const rawOverallDist = res.data.data.lengthOptionOverallDist
           const parsedOverallDist = this.parseLengthOptionOverallDist(rawOverallDist)
@@ -530,13 +541,13 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载时长问题观点整体分布失败，${res.data.message}`,
+            message: `加载上一轮时长问题填写结果的整体分布失败，${res.data.message}`,
             type: 'error',
           })
         }
       }).catch(error => {
         this.showToast({
-          message: `加载时长问题观点整体分布失败，${error}`,
+          message: `加载上一轮时长问题填写结果的整体分布失败，${error}`,
           type: 'error',
         })
       })
@@ -594,13 +605,13 @@ export default {
             })
           } else {
             this.showToast({
-              message: res.data.message,
+              message: `提交失败，${res.data.message}`,
               type: 'error',
             })
           }
         }).catch(error => {
           this.showToast({
-            message: error,
+            message: `提交失败，${error}`,
             type: 'error',
           })
         })
