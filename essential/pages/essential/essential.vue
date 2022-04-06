@@ -333,7 +333,7 @@ export default {
           attitude: 5,
           priceOptionKey: null,
           lengthOptionKey: null,
-          opinion: null,
+          view: null,
         },
       },
       basicInfoFormRules: {
