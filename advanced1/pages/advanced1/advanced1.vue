@@ -111,7 +111,7 @@
             type="primary"
             :bold="true"
             size="16"
-            :text="'3. ' + attitudeQuestion.numberBoundaryQuestion.content"
+            :text="attitudeQuestionContent"
         ></u--text>
 
         <u-row justify="space-between" gutter="10">
@@ -146,7 +146,7 @@
             type="primary"
             :bold="true"
             size="16"
-            :text="'4. ' + priceQuestion.optionQuestion.content"
+            :text="priceQuestionContent"
         ></u--text>
 
         <u-radio-group
@@ -170,7 +170,7 @@
             type="primary"
             :bold="true"
             size="16"
-            :text="'5. ' + lengthQuestion.optionQuestion.content"
+            :text="lengthQuestionContent"
         ></u--text>
 
         <u-radio-group
@@ -314,6 +314,30 @@ export default {
     },
     shouldShowLengthQuestion() {
       return parseInt(this.submission.opinionItem.attitude) > parseInt(this.lengthQuestion.attitudeThreshold)
+    },
+    attitudeQuestionNumber() {
+      return 3
+    },
+    priceQuestionNumber() {
+      return this.attitudeQuestionNumber + 1
+    },
+    lengthQuestionNumber() {
+      let number = this.attitudeQuestionNumber + 1
+
+      if (this.shouldShowPriceQuestion) {
+        number += 1
+      }
+
+      return number
+    },
+    attitudeQuestionContent() {
+      return `${this.attitudeQuestionNumber}. ${this.attitudeQuestion.numberBoundaryQuestion.content}`
+    },
+    priceQuestionContent() {
+      return `${this.priceQuestionNumber}. ${this.priceQuestion.optionQuestion.content}`
+    },
+    lengthQuestionContent() {
+      return `${this.lengthQuestionNumber}. ${this.lengthQuestion.optionQuestion.content}`
     },
   },
   watch: {
