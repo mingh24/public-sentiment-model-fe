@@ -43,7 +43,6 @@
 
         <view v-if="isPreviousQuestionLoaded" class="opinion-dist-cell">
           <u--text
-              v-if="isPreviousQuestionLoaded"
               type="default"
               :bold="true"
               size="14"
@@ -62,7 +61,6 @@
 
         <view v-if="isPreviousQuestionLoaded" class="opinion-dist-cell">
           <u--text
-              v-if="isPreviousQuestionLoaded"
               type="default"
               :bold="true"
               size="14"
@@ -81,7 +79,6 @@
 
         <view v-if="isPreviousQuestionLoaded" class="opinion-dist-cell">
           <u--text
-              v-if="isPreviousQuestionLoaded"
               type="default"
               :bold="true"
               size="14"
