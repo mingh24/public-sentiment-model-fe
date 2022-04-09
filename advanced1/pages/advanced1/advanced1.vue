@@ -38,11 +38,12 @@
             type="primary"
             :bold="true"
             size="16"
-            text="2. 上一轮填写全体同学的观点分布"
+            text="2. 上一轮填写中全体同学的观点分布"
         ></u--text>
 
-        <view v-if="isAttitudeOverallDistLoaded" class="opinion-dist-cell">
+        <view v-if="isPreviousQuestionLoaded" class="opinion-dist-cell">
           <u--text
+              v-if="isPreviousQuestionLoaded"
               type="default"
               :bold="true"
               size="14"
@@ -59,8 +60,9 @@
           </view>
         </view>
 
-        <view v-if="isPriceOptionOverallDistLoaded" class="opinion-dist-cell">
+        <view v-if="isPreviousQuestionLoaded" class="opinion-dist-cell">
           <u--text
+              v-if="isPreviousQuestionLoaded"
               type="default"
               :bold="true"
               size="14"
@@ -77,8 +79,9 @@
           </view>
         </view>
 
-        <view v-if="isLengthOptionOverallDistLoaded" class="opinion-dist-cell">
+        <view v-if="isPreviousQuestionLoaded" class="opinion-dist-cell">
           <u--text
+              v-if="isPreviousQuestionLoaded"
               type="default"
               :bold="true"
               size="14"
@@ -230,7 +233,7 @@ export default {
       questionId: 2,
       previousQuestionId: 1,
       previousQuestionContent: null,
-      isAttitudeOverallDistLoaded: false,
+      isPreviousQuestionLoaded: false,
       attitudeOverallDist: {
         categories: [],
         series: [
@@ -239,7 +242,6 @@ export default {
           },
         ],
       },
-      isPriceOptionOverallDistLoaded: false,
       priceOptionOverallDist: {
         categories: [],
         series: [
@@ -248,7 +250,6 @@ export default {
           },
         ],
       },
-      isLengthOptionOverallDistLoaded: false,
       lengthOptionOverallDist: {
         categories: [],
         series: [
@@ -354,6 +355,7 @@ export default {
   },
   onShow() {
     this.submission.opinionItem.questionId = this.questionId
+    this.isPreviousQuestionLoaded = false
 
     this.isAttitudeOverallDistLoaded = false
     this.attitudeOverallDist = {
@@ -466,10 +468,12 @@ export default {
       return data
     },
     fetchAllOverallDist() {
+      this.isPreviousQuestionLoaded = false
       getQuestionByQuestionId(this.previousQuestionId).then(res => {
         if (res.data.status === StatusCode.SUCCESS) {
           this.previousQuestionContent = res.data.data.questionContent
           this.previousQuestionContent.attitudeQuestion.numberBoundaryQuestion.marks = JSON.parse(this.previousQuestionContent.attitudeQuestion.numberBoundaryQuestion.marks)
+          this.isPreviousQuestionLoaded = true
         } else {
           this.showToast({
             message: `加载上一轮问题信息失败，${res.data.message}`,
@@ -483,7 +487,6 @@ export default {
         })
       })
 
-      this.isAttitudeOverallDistLoaded = true
       this.attitudeOverallDist.series = []
       getAttitudeOverallDistribution(this.previousQuestionId).then(res => {
         if (res.data.status === StatusCode.SUCCESS) {
@@ -514,7 +517,6 @@ export default {
         })
       })
 
-      this.isPriceOptionOverallDistLoaded = true
       this.priceOptionOverallDist.series = []
       getPriceOptionOverallDistribution(this.previousQuestionId).then(res => {
         if (res.data.status === StatusCode.SUCCESS) {
@@ -545,7 +547,6 @@ export default {
         })
       })
 
-      this.isLengthOptionOverallDistLoaded = true
       this.lengthOptionOverallDist.series = []
       getLengthOptionOverallDistribution(this.previousQuestionId).then(res => {
         if (res.data.status === StatusCode.SUCCESS) {
