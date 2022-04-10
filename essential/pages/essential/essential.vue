@@ -28,9 +28,9 @@
             ></u--input>
           </u-form-item>
         </u--form>
-      </view>
 
-      <u-gap></u-gap>
+        <u-gap></u-gap>
+      </view>
 
       <view class="questionnaire-cell">
         <u--text
@@ -62,9 +62,9 @@
             ></u--text>
           </u-col>
         </u-row>
-      </view>
 
-      <u-gap></u-gap>
+        <u-gap></u-gap>
+      </view>
 
       <view class="questionnaire-cell">
         <u--text
@@ -97,9 +97,9 @@
             </u--text>
           </u-col>
         </u-row>
-      </view>
 
-      <u-gap></u-gap>
+        <u-gap></u-gap>
+      </view>
 
       <view class="questionnaire-cell">
         <u--text
@@ -176,9 +176,9 @@
             ></u-button>
           </u--form>
         </view>
-      </view>
 
-      <u-gap></u-gap>
+        <u-gap></u-gap>
+      </view>
 
       <view class="questionnaire-cell">
         <u--text
@@ -210,9 +210,9 @@
             ></u--text>
           </u-col>
         </u-row>
-      </view>
 
-      <u-gap></u-gap>
+        <u-gap></u-gap>
+      </view>
 
       <view v-if="shouldShowPriceQuestion" class="questionnaire-cell">
         <u--text
@@ -234,9 +234,9 @@
               :name="option.optionKey"
           ></u-radio>
         </u-radio-group>
-      </view>
 
-      <u-gap></u-gap>
+        <u-gap></u-gap>
+      </view>
 
       <view v-if="shouldShowLengthQuestion" class="questionnaire-cell">
         <u--text
@@ -258,6 +258,8 @@
               :name="option.optionKey"
           ></u-radio>
         </u-radio-group>
+
+        <u-gap></u-gap>
       </view>
 
       <u-gap></u-gap>
@@ -602,12 +604,12 @@ export default {
   width: 50%;
 }
 
-.questionnaire .questionnaire-cell .u-radio {
-  margin: 10 rpx;
-}
-
-.questionnaire-cell .el-slider {
+.questionnaire .questionnaire-cell .el-slider {
   padding: 20 rpx;
   word-break: keep-all;
+}
+
+.questionnaire .questionnaire-cell .u-radio {
+  margin: 10 rpx;
 }
 </style>
