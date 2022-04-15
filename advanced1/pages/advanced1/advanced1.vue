@@ -41,7 +41,7 @@
             text="2. 上一轮填写中全体同学的观点分布"
         ></u--text>
 
-        <view v-if="isPreviousQuestionLoaded" class="opinion-dist-cell">
+        <view v-if="isOverallDistLoaded" class="opinion-dist-cell">
           <u--text
               type="default"
               :bold="true"
@@ -59,7 +59,7 @@
           </view>
         </view>
 
-        <view v-if="isPreviousQuestionLoaded" class="opinion-dist-cell">
+        <view v-if="isOverallDistLoaded" class="opinion-dist-cell">
           <u--text
               type="default"
               :bold="true"
@@ -77,7 +77,7 @@
           </view>
         </view>
 
-        <view v-if="isPreviousQuestionLoaded" class="opinion-dist-cell">
+        <view v-if="isOverallDistLoaded" class="opinion-dist-cell">
           <u--text
               type="default"
               :bold="true"
@@ -232,7 +232,7 @@ export default {
       questionId: 2,
       previousQuestionId: 1,
       previousQuestionContent: null,
-      isPreviousQuestionLoaded: false,
+      isOverallDistLoaded: false,
       attitudeOverallDist: {
         categories: [],
         series: [
@@ -354,7 +354,7 @@ export default {
   },
   onShow() {
     this.submission.opinionItem.questionId = this.questionId
-    this.isPreviousQuestionLoaded = false
+    this.isOverallDistLoaded = false
 
     this.isAttitudeOverallDistLoaded = false
     this.attitudeOverallDist = {
@@ -467,12 +467,12 @@ export default {
       return data
     },
     fetchAllOverallDist() {
-      this.isPreviousQuestionLoaded = false
+      this.isOverallDistLoaded = false
       getQuestionByQuestionId(this.previousQuestionId).then(res => {
         if (res.data.status === StatusCode.SUCCESS) {
           this.previousQuestionContent = res.data.data.questionContent
           this.previousQuestionContent.attitudeQuestion.numberBoundaryQuestion.marks = JSON.parse(this.previousQuestionContent.attitudeQuestion.numberBoundaryQuestion.marks)
-          this.isPreviousQuestionLoaded = true
+          this.isOverallDistLoaded = true
         } else {
           this.showToast({
             message: `加载上一轮问题信息失败，${res.data.message}`,
@@ -505,15 +505,31 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载上一轮观点支持度填写结果的整体分布失败，${res.data.message}`,
+            message: `加载上一轮观点支持度填写结果整体的分布失败，${res.data.message}`,
             type: 'error',
           })
+
+          this.attitudeOverallDist.series.push({})
+          this.attitudeOverallDist.series[0].data = [
+            {
+              name: '暂无数据',
+              value: 0,
+            },
+          ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮观点支持度填写结果的整体分布失败，${error}`,
+          message: `加载上一轮观点支持度填写结果整体的分布失败，${error}`,
           type: 'error',
         })
+
+        this.attitudeOverallDist.series.push({})
+        this.attitudeOverallDist.series[0].data = [
+          {
+            name: '暂无数据',
+            value: 0,
+          },
+        ]
       })
 
       this.priceOptionOverallDist.series = []
@@ -535,15 +551,31 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载上一轮价钱问题填写结果的整体分布失败，${res.data.message}`,
+            message: `加载上一轮价钱问题填写结果整体的分布失败，${res.data.message}`,
             type: 'error',
           })
+
+          this.priceOptionOverallDist.series.push({})
+          this.priceOptionOverallDist.series[0].data = [
+            {
+              name: '暂无数据',
+              value: 0,
+            },
+          ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮价钱问题填写结果的整体分布失败，${error}`,
+          message: `加载上一轮价钱问题填写结果整体的分布失败，${error}`,
           type: 'error',
         })
+
+        this.priceOptionOverallDist.series.push({})
+        this.priceOptionOverallDist.series[0].data = [
+          {
+            name: '暂无数据',
+            value: 0,
+          },
+        ]
       })
 
       this.lengthOptionOverallDist.series = []
@@ -565,15 +597,31 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载上一轮时长问题填写结果的整体分布失败，${res.data.message}`,
+            message: `加载上一轮时长问题填写结果整体的分布失败，${res.data.message}`,
             type: 'error',
           })
+
+          this.lengthOptionOverallDist.series.push({})
+          this.lengthOptionOverallDist.series[0].data = [
+            {
+              name: '暂无数据',
+              value: 0,
+            },
+          ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮时长问题填写结果的整体分布失败，${error}`,
+          message: `加载上一轮时长问题填写结果整体的分布失败，${error}`,
           type: 'error',
         })
+
+        this.lengthOptionOverallDist.series.push({})
+        this.lengthOptionOverallDist.series[0].data = [
+          {
+            name: '暂无数据',
+            value: 0,
+          },
+        ]
       })
     },
     submit() {
