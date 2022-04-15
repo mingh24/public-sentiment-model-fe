@@ -687,15 +687,31 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载上一轮观点支持度填写结果的整体分布失败，${res.data.message}`,
+            message: `加载上一轮观点支持度填写结果整体的分布失败，${res.data.message}`,
             type: 'error',
           })
+
+          this.attitudeOverallDist.series.push({})
+          this.attitudeOverallDist.series[0].data = [
+            {
+              name: '暂无数据',
+              value: 0,
+            },
+          ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮观点支持度填写结果的整体分布失败，${error}`,
+          message: `加载上一轮观点支持度填写结果整体的分布失败，${error}`,
           type: 'error',
         })
+
+        this.attitudeOverallDist.series.push({})
+        this.attitudeOverallDist.series[0].data = [
+          {
+            name: '暂无数据',
+            value: 0,
+          },
+        ]
       })
 
       this.priceOptionOverallDist.series = []
@@ -717,15 +733,31 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载上一轮价钱问题填写结果的整体分布失败，${res.data.message}`,
+            message: `加载上一轮价钱问题填写结果整体的分布失败，${res.data.message}`,
             type: 'error',
           })
+
+          this.priceOptionOverallDist.series.push({})
+          this.priceOptionOverallDist.series[0].data = [
+            {
+              name: '暂无数据',
+              value: 0,
+            },
+          ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮价钱问题填写结果的整体分布失败，${error}`,
+          message: `加载上一轮价钱问题填写结果整体的分布失败，${error}`,
           type: 'error',
         })
+
+        this.priceOptionOverallDist.series.push({})
+        this.priceOptionOverallDist.series[0].data = [
+          {
+            name: '暂无数据',
+            value: 0,
+          },
+        ]
       })
 
       this.lengthOptionOverallDist.series = []
@@ -747,19 +779,42 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载上一轮时长问题填写结果的整体分布失败，${res.data.message}`,
+            message: `加载上一轮时长问题填写结果整体的分布失败，${res.data.message}`,
             type: 'error',
           })
+
+          this.lengthOptionOverallDist.series.push({})
+          this.lengthOptionOverallDist.series[0].data = [
+            {
+              name: '暂无数据',
+              value: 0,
+            },
+          ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮时长问题填写结果的整体分布失败，${error}`,
+          message: `加载上一轮时长问题填写结果整体的分布失败，${error}`,
           type: 'error',
         })
+
+        this.lengthOptionOverallDist.series.push({})
+        this.lengthOptionOverallDist.series[0].data = [
+          {
+            name: '暂无数据',
+            value: 0,
+          },
+        ]
       })
     },
     fetchAllIntimateDist() {
-      // TODO 检查学号是否填写
+      if (!/^\d{8}$/g.test(String(this.submission.studentId))) {
+        this.showToast({
+          message: `学号输入有误`,
+          type: 'error',
+        })
+
+        return
+      }
 
       this.isIntimateDistLoaded = false
       getQuestionByQuestionId(this.previousQuestionId).then(res => {
@@ -806,15 +861,31 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载上一轮观点支持度填写结果的整体分布失败，${res.data.message}`,
+            message: `加载上一轮观点支持度填写结果在亲密同学中的分布失败，${res.data.message}`,
             type: 'error',
           })
+
+          this.attitudeIntimateDist.series.push({})
+          this.attitudeIntimateDist.series[0].data = [
+            {
+              name: '暂无数据',
+              value: 0,
+            },
+          ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮观点支持度填写结果的整体分布失败，${error}`,
+          message: `加载上一轮观点支持度填写结果在亲密同学中的分布失败，${error}`,
           type: 'error',
         })
+
+        this.attitudeIntimateDist.series.push({})
+        this.attitudeIntimateDist.series[0].data = [
+          {
+            name: '暂无数据',
+            value: 0,
+          },
+        ]
       })
 
       this.priceOptionIntimateDist.series = []
@@ -843,15 +914,31 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载上一轮价钱问题填写结果的整体分布失败，${res.data.message}`,
+            message: `加载上一轮价钱问题填写结果在亲密同学中的分布失败，${res.data.message}`,
             type: 'error',
           })
+
+          this.priceOptionIntimateDist.series.push({})
+          this.priceOptionIntimateDist.series[0].data = [
+            {
+              name: '暂无数据',
+              value: 0,
+            },
+          ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮价钱问题填写结果的整体分布失败，${error}`,
+          message: `加载上一轮价钱问题填写结果在亲密同学中的分布失败，${error}`,
           type: 'error',
         })
+
+        this.priceOptionIntimateDist.series.push({})
+        this.priceOptionIntimateDist.series[0].data = [
+          {
+            name: '暂无数据',
+            value: 0,
+          },
+        ]
       })
 
       this.lengthOptionIntimateDist.series = []
@@ -880,15 +967,31 @@ export default {
           }
         } else {
           this.showToast({
-            message: `加载上一轮时长问题填写结果的整体分布失败，${res.data.message}`,
+            message: `加载上一轮时长问题填写结果在亲密同学中的分布失败，${res.data.message}`,
             type: 'error',
           })
+
+          this.lengthOptionIntimateDist.series.push({})
+          this.lengthOptionIntimateDist.series[0].data = [
+            {
+              name: '暂无数据',
+              value: 0,
+            },
+          ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮时长问题填写结果的整体分布失败，${error}`,
+          message: `加载上一轮时长问题填写结果在亲密同学中的分布失败，${error}`,
           type: 'error',
         })
+
+        this.lengthOptionIntimateDist.series.push({})
+        this.lengthOptionIntimateDist.series[0].data = [
+          {
+            name: '暂无数据',
+            value: 0,
+          },
+        ]
       })
     },
     submit() {
