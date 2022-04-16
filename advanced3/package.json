@@ -1,0 +1,23 @@
+{
+    "name": "public-sentiment-model-fe-advanced3",
+    "version": "1.0.0",
+    "description": "",
+    "main": "main.js",
+    "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+      "axios": "^0.26.0",
+      "element-ui": "^2.15.6",
+      "uview-ui": "^2.0.28"
+    },
+    "devDependencies": {
+      "node-sass": "^7.0.1",
+      "sass-loader": "^10.2.1",
+      "sass-resources-loader": "^2.2.4"
+    }
+  }
+  
