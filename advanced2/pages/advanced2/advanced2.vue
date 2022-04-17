@@ -187,8 +187,8 @@
             :text="attitudeQuestionContent"
         ></u--text>
 
-        <u-row justify="space-between" gutter="10">
-          <u-col span="11">
+        <u-row justify="space-between" gutter="12">
+          <u-col span="10">
             <el-slider
                 :step="1"
                 :min="attitudeQuestion.numberBoundaryQuestion.min"

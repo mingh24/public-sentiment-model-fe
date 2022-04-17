@@ -40,8 +40,8 @@
             text="2. 与班级同学整体的亲密度分值(1 - 10)"
         ></u--text>
 
-        <u-row justify="space-between" gutter="10">
-          <u-col span="11">
+        <u-row justify="space-between" gutter="12">
+          <u-col span="10">
             <el-slider
                 :step="1"
                 :min="1"
@@ -74,8 +74,8 @@
             text="3. 与舍友整体的亲密度分值(1 - 10)"
         ></u--text>
 
-        <u-row justify="space-between" gutter="10">
-          <u-col span="11">
+        <u-row justify="space-between" gutter="12">
+          <u-col span="10">
             <el-slider
                 :step="1"
                 :min="1"
@@ -188,8 +188,8 @@
             :text="attitudeQuestionContent"
         ></u--text>
 
-        <u-row justify="space-between" gutter="10">
-          <u-col span="11">
+        <u-row justify="space-between" gutter="12">
+          <u-col span="10">
             <el-slider
                 :step="1"
                 :min="attitudeQuestion.numberBoundaryQuestion.min"
