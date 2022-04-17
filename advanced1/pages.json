@@ -6,7 +6,7 @@
     {
       "path": "pages/advanced1/advanced1",
       "style": {
-        "navigationBarTitleText": "TBD第2阶段问卷",
+        "navigationBarTitleText": "深度辅导影响调研",
         "enablePullDownRefresh": false,
         "disableSwipeBack": true
       }
@@ -14,7 +14,7 @@
     {
       "path": "pages/success/success",
       "style": {
-        "navigationBarTitleText": "TBD第2阶段问卷",
+        "navigationBarTitleText": "深度辅导影响调研",
         "enablePullDownRefresh": false
       }
     }
