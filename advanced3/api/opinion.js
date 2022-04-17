@@ -8,6 +8,8 @@ export const getPriceOptionOverallDistribution = questionId => get(`/opinions/pr
 
 export const getLengthOptionOverallDistribution = questionId => get(`/opinions/length-option/overall-distribution/${questionId}`)
 
+export const getViewOverallDistribution = questionId => get(`/opinions/view/overall-distribution/${questionId}`)
+
 export const getAttitudeIntimateDistribution = (studentId, questionId) => get(`/opinions/attitude/intimate-distribution/${studentId}/${questionId}`)
 
 export const getPriceOptionIntimateDistribution = (studentId, questionId) => get(`/opinions/price-option/intimate-distribution/${studentId}/${questionId}`)

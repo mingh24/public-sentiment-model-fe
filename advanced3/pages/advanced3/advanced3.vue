@@ -95,6 +95,24 @@
           </view>
         </view>
 
+        <view v-if="isOverallDistLoaded" class="opinion-dist-cell">
+          <u--text
+              type="default"
+              :bold="true"
+              size="14"
+              :text="'2.4 针对“' + previousQuestionContent.viewQuestion.textFillingQuestion.content + '”这一问题，上一轮填写中全体同学观点的关键词分布为'"
+          ></u--text>
+
+          <view class="chart-box">
+            <qiun-data-charts
+                type="word"
+                :chartData="viewOverallDist.keywordCount"
+                :loadingType="5"
+                background="none"
+            />
+          </view>
+        </view>
+
         <view class="opinion-dist-cell">
           <u-button
               type="primary"
@@ -329,6 +347,7 @@ import {
   getAttitudeOverallDistribution,
   getPriceOptionOverallDistribution,
   getLengthOptionOverallDistribution,
+  getViewOverallDistribution,
   getAttitudeIntimateDistribution,
   getPriceOptionIntimateDistribution,
   getLengthOptionIntimateDistribution,
@@ -383,6 +402,16 @@ export default {
             data: [],
           },
         ],
+      },
+      viewOverallDist: {
+        keywordCount: {
+          categories: [],
+          series: [
+            {
+              data: [],
+            },
+          ],
+        }
       },
       isIntimateDistLoaded: false,
       attitudeIntimateDist: {
@@ -839,6 +868,58 @@ export default {
       })
 
       // TODO 获取看法
+      this.viewOverallDist.keywordCount.series = []
+      getViewOverallDistribution(this.previousQuestionId).then(res => {
+        if (res.data.status === StatusCode.SUCCESS) {
+          // TODO 改用真实数据
+          this.viewOverallDist.keywordCount.series = [
+            {
+              name: 'mock关键词1',
+              textSize: 20,
+            },
+            {
+              name: 'mock关键词2',
+              textSize: 12,
+            },
+            {
+              name: 'mock关键词3',
+              textSize: 15,
+            },
+            {
+              name: 'mock关键词4',
+              textSize: 5,
+            },
+            {
+              name: 'mock关键词6',
+              textSize: 10
+            }
+          ]
+        } else {
+          this.showToast({
+            message: `加载上一轮看法问题填写结果关键词整体的分布失败，${res.data.message}`,
+            type: 'error',
+          })
+
+          this.viewOverallDist.keywordCount.series = [
+            {
+              name: '暂无数据',
+              textSize: 20,
+            },
+          ]
+        }
+      }).catch(error => {
+        this.showToast({
+          message: `加载上一轮看法问题填写结果关键词整体的分布失败，${error}`,
+          type: 'error',
+        })
+
+        this.viewOverallDist.keywordCount.series = [
+          {
+            name: '暂无数据',
+            textSize: 20,
+          },
+        ]
+      })
     },
     fetchAllIntimateDist() {
       if (!/^\d{8}$/g.test(String(this.submission.studentId))) {
@@ -1044,13 +1125,13 @@ export default {
           })
         } else {
           this.showToast({
-            message: `加载上一轮时长问题填写结果在亲密同学中的分布失败，${res.data.message}`,
+            message: `加载上一轮看法问题填写结果在亲密同学中的分布失败，${res.data.message}`,
             type: 'error',
           })
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮时长问题填写结果在亲密同学中的分布失败，${error}`,
+          message: `加载上一轮看法问题填写结果在亲密同学中的分布失败，${error}`,
           type: 'error',
         })
       })
