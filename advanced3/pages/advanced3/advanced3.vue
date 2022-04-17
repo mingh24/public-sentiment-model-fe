@@ -168,6 +168,32 @@
           </view>
         </view>
 
+        <view v-if="isIntimateDistLoaded" class="opinion-dist-cell">
+          <u--text
+              type="default"
+              :bold="true"
+              size="14"
+              :text="'3.4 针对“' + previousQuestionContent.viewQuestion.textFillingQuestion.content + '”这一问题，上一轮填写中与您亲密度较高的部分同学观点为'"
+          ></u--text>
+
+          <view class="view-cell">
+            <el-table
+                :data="viewIntimateDist.viewList"
+                :show-header="false"
+                size="small"
+            >
+              <el-table-column
+                  type="index"
+              ></el-table-column>
+              <el-table-column
+                  prop="view"
+              ></el-table-column>
+            </el-table>
+          </view>
+
+          <u-gap></u-gap>
+        </view>
+
         <view class="opinion-dist-cell">
           <u-button
               type="primary"
@@ -304,6 +330,7 @@ import {
   getAttitudeIntimateDistribution,
   getPriceOptionIntimateDistribution,
   getLengthOptionIntimateDistribution,
+  getViewIntimateDistribution,
 } from '@/api/opinion'
 import {submitAdvanced} from '@/api/questionnaire'
 import StatusCode from '@/common/statusCode'
@@ -379,6 +406,9 @@ export default {
             data: [],
           },
         ],
+      },
+      viewIntimateDist: {
+        viewList: [],
       },
       attitudeQuestion: {
         numberBoundaryQuestion: {
@@ -996,7 +1026,32 @@ export default {
         ]
       })
 
-      // TODO 获取看法
+      this.viewIntimateDist.viewList = []
+      getViewIntimateDistribution(this.submission.studentId, this.previousQuestionId).then(res => {
+        if (res.data.status === StatusCode.SUCCESS) {
+          if (res.data.message !== 'success') {
+            this.showToast({
+              message: res.data.message,
+              type: 'default',
+            })
+          }
+
+          const rawIntimateDist = res.data.data.viewIntimateDist
+          this.viewIntimateDist.viewList = rawIntimateDist.viewList.map(value => {
+            return {view: value}
+          })
+        } else {
+          this.showToast({
+            message: `加载上一轮时长问题填写结果在亲密同学中的分布失败，${res.data.message}`,
+            type: 'error',
+          })
+        }
+      }).catch(error => {
+        this.showToast({
+          message: `加载上一轮时长问题填写结果在亲密同学中的分布失败，${error}`,
+          type: 'error',
+        })
+      })
     },
     submit() {
       this.$refs.basicInfoForm.validate().then(res => {
@@ -1110,6 +1165,9 @@ export default {
 }
 
 .questionnaire .questionnaire-cell .opinion-dist-cell .chart-box {
+}
+
+.questionnaire .questionnaire-cell .opinion-dist-cell .view-cell {
 }
 
 .questionnaire .questionnaire-cell .el-slider {

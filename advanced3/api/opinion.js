@@ -13,3 +13,5 @@ export const getAttitudeIntimateDistribution = (studentId, questionId) => get(`/
 export const getPriceOptionIntimateDistribution = (studentId, questionId) => get(`/opinions/price-option/intimate-distribution/${studentId}/${questionId}`)
 
 export const getLengthOptionIntimateDistribution = (studentId, questionId) => get(`/opinions/length-option/intimate-distribution/${studentId}/${questionId}`)
+
+export const getViewIntimateDistribution = (studentId, questionId) => get(`/opinions/view/intimate-distribution/${studentId}/${questionId}`)
