@@ -37,15 +37,16 @@
             type="primary"
             :bold="true"
             size="16"
-            text="2. 与班级同学整体的亲密度分值(1 - 10)"
+            :text="'2. ' + classmateIntimacyQuestion.numberBoundaryQuestion.content"
         ></u--text>
 
         <u-row justify="space-between" gutter="12">
           <u-col span="10">
             <el-slider
                 :step="1"
-                :min="1"
-                :max="10"
+                :min="classmateIntimacyQuestion.numberBoundaryQuestion.min"
+                :max="classmateIntimacyQuestion.numberBoundaryQuestion.max"
+                :marks="classmateIntimacyQuestion.numberBoundaryQuestion.marks"
                 :show-tooltip="false"
                 show-stops
                 v-model="submission.classmateIntimacy"
@@ -71,15 +72,16 @@
             type="primary"
             :bold="true"
             size="16"
-            text="3. 与舍友整体的亲密度分值(1 - 10)"
+            :text="'3. ' + roommateIntimacyQuestion.numberBoundaryQuestion.content"
         ></u--text>
 
         <u-row justify="space-between" gutter="12">
           <u-col span="10">
             <el-slider
                 :step="1"
-                :min="1"
-                :max="10"
+                :min="roommateIntimacyQuestion.numberBoundaryQuestion.min"
+                :max="roommateIntimacyQuestion.numberBoundaryQuestion.max"
+                :marks="roommateIntimacyQuestion.numberBoundaryQuestion.marks"
                 :show-tooltip="false"
                 show-stops
                 v-model="submission.roommateIntimacy"
@@ -106,7 +108,7 @@
             type="primary"
             :bold="true"
             size="16"
-            text="4. 请列出 1 至 3 位与您最亲密的同学及亲密度分值(1 - 10)"
+            :text="'4. ' + friendIntimacyQuestion.numberBoundaryQuestion.content"
         >
         </u--text>
 
@@ -121,51 +123,52 @@
                 :key="index"
                 :index="index"
             >
-              <view style="align-content: center">
-                <u-form-item
-                    label="姓名"
-                    :required="true"
-                    prop="'friendItemList.' + index + '.name'"
-                >
-                  <u--input
-                      prefixIcon="account"
-                      placeholder="请输入姓名"
-                      v-model="submission.friendItemList[index].name"
-                  ></u--input>
-                </u-form-item>
+              <u-form-item
+                  label="姓名"
+                  :required="true"
+                  prop="'friendItemList.' + index + '.name'"
+              >
+                <u--input
+                    prefixIcon="account"
+                    placeholder="请输入姓名"
+                    v-model="submission.friendItemList[index].name"
+                ></u--input>
+              </u-form-item>
 
-                <u-row justify="space-between" gutter="10">
-                  <u-col span="11">
-                    <el-slider
-                        :step="1"
-                        :min="1"
-                        :max="10"
-                        :show-tooltip="false"
-                        show-stops
-                        v-model="submission.friendItemList[index].intimacy"
-                    ></el-slider>
-                  </u-col>
+              <u-row justify="space-between" gutter="12">
+                <u-col span="10">
+                  <el-slider
+                      :step="1"
+                      :min="friendIntimacyQuestion.numberBoundaryQuestion.min"
+                      :max="friendIntimacyQuestion.numberBoundaryQuestion.max"
+                      :marks="friendIntimacyQuestion.numberBoundaryQuestion.marks"
+                      :show-tooltip="false"
+                      show-stops
+                      v-model="submission.friendItemList[index].intimacy"
+                  ></el-slider>
+                </u-col>
 
-                  <u-col span="1">
-                    <u--text
-                        type="primary"
-                        :bold="true"
-                        size="16"
-                        :text="submission.friendItemList[index].intimacy"
-                    ></u--text>
-                  </u-col>
-                </u-row>
+                <u-col span="1">
+                  <u--text
+                      type="primary"
+                      :bold="true"
+                      size="16"
+                      :text="submission.friendItemList[index].intimacy"
+                  ></u--text>
+                </u-col>
+              </u-row>
 
-                <u-button
-                    v-if="submission.friendItemList.length > 1"
-                    type="warning"
-                    text="删除"
-                    @click="removeFriendItem(index)"
-                >
-                </u-button>
+              <u-gap></u-gap>
 
-                <u-divider></u-divider>
-              </view>
+              <u-button
+                  v-if="submission.friendItemList.length > 1"
+                  type="warning"
+                  text="删除"
+                  @click="removeFriendItem(index)"
+              >
+              </u-button>
+
+              <u-divider></u-divider>
             </view>
 
             <u-button
@@ -300,6 +303,30 @@ export default {
 				</p>
 				`,
       questionId: 1,
+      classmateIntimacyQuestion: {
+        numberBoundaryQuestion: {
+          content: null,
+          min: null,
+          max: null,
+          marks: null,
+        },
+      },
+      roommateIntimacyQuestion: {
+        numberBoundaryQuestion: {
+          content: null,
+          min: null,
+          max: null,
+          marks: null,
+        },
+      },
+      friendIntimacyQuestion: {
+        numberBoundaryQuestion: {
+          content: null,
+          min: null,
+          max: null,
+          marks: null,
+        },
+      },
       attitudeQuestion: {
         numberBoundaryQuestion: {
           content: null,
@@ -425,6 +452,12 @@ export default {
     getQuestionByQuestionId(this.questionId).then(res => {
       if (res.data.status === StatusCode.SUCCESS) {
         const questionContent = res.data.data.questionContent
+        this.classmateIntimacyQuestion = questionContent.classmateIntimacyQuestion
+        this.classmateIntimacyQuestion.numberBoundaryQuestion.marks = JSON.parse(this.classmateIntimacyQuestion.numberBoundaryQuestion.marks)
+        this.roommateIntimacyQuestion = questionContent.roommateIntimacyQuestion
+        this.roommateIntimacyQuestion.numberBoundaryQuestion.marks = JSON.parse(this.roommateIntimacyQuestion.numberBoundaryQuestion.marks)
+        this.friendIntimacyQuestion = questionContent.friendIntimacyQuestion
+        this.friendIntimacyQuestion.numberBoundaryQuestion.marks = JSON.parse(this.friendIntimacyQuestion.numberBoundaryQuestion.marks)
         this.attitudeQuestion = questionContent.attitudeQuestion
         this.attitudeQuestion.numberBoundaryQuestion.marks = JSON.parse(this.attitudeQuestion.numberBoundaryQuestion.marks)
         this.priceQuestion = questionContent.priceQuestion
@@ -596,22 +629,15 @@ export default {
 .questionnaire .questionnaire-cell {
 }
 
-.questionnaire .questionnaire-cell .questionnaire-friend-cell {
-  margin-top: 10 rpx;
-  margin-bottom: 10 rpx;
-  padding: 20 rpx;
-}
-
-.questionnaire .questionnaire-cell .questionnaire-friend-cell .u-button {
-  width: 50%;
-}
-
 .questionnaire .questionnaire-cell .el-slider {
   padding: 20 rpx;
   word-break: keep-all;
 }
 
-.questionnaire .questionnaire-cell .u-radio {
-  margin: 10 rpx;
+.questionnaire .questionnaire-cell .questionnaire-friend-cell {
+}
+
+.questionnaire .questionnaire-cell .questionnaire-friend-cell .u-button {
+  width: 50%;
 }
 </style>
