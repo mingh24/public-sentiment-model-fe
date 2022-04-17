@@ -159,6 +159,7 @@
               :key="option.optionKey"
               :label="option.optionKey + '. ' + option.optionValue"
               :name="option.optionKey"
+              :customStyle="{marginTop: '20rpx'}"
           ></u-radio>
         </u-radio-group>
 
@@ -183,6 +184,7 @@
               :key="option.optionKey"
               :label="option.optionKey + '. ' + option.optionValue"
               :name="option.optionKey"
+              :customStyle="{marginTop: '20rpx'}"
           ></u-radio>
         </u-radio-group>
 
