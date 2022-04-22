@@ -673,6 +673,18 @@ export default {
 
       return data
     },
+    parseViewKeywordCountOverallDist(rawDist) {
+      const data = []
+
+      for (let i = 0; i < rawDist.length; i++) {
+        data.push({
+          name: rawDist[i].name,
+          textSize: 16, // TODO 找到合适的函数来计算
+        })
+      }
+
+      return data
+    },
     parseAttitudeIntimateDist(rawDist) {
       const data = []
 
@@ -867,33 +879,22 @@ export default {
         ]
       })
 
-      // TODO 获取看法
       this.viewOverallDist.keywordCount.series = []
       getViewOverallDistribution(this.previousQuestionId).then(res => {
         if (res.data.status === StatusCode.SUCCESS) {
-          // TODO 改用真实数据
-          this.viewOverallDist.keywordCount.series = [
-            {
-              name: 'mock关键词1',
-              textSize: 20,
-            },
-            {
-              name: 'mock关键词2',
-              textSize: 12,
-            },
-            {
-              name: 'mock关键词3',
-              textSize: 15,
-            },
-            {
-              name: 'mock关键词4',
-              textSize: 5,
-            },
-            {
-              name: 'mock关键词6',
-              textSize: 10
-            }
-          ]
+          const rawOverallDist = res.data.data.viewOverallDist.keywordCount
+          const parsedOverallDist = this.parseViewKeywordCountOverallDist(rawOverallDist)
+
+          if (parsedOverallDist.length > 0) {
+            this.viewOverallDist.keywordCount.series = parsedOverallDist
+          } else {
+            this.viewOverallDist.keywordCount.series = [
+              {
+                name: '暂无数据',
+                textSize: 16,
+              },
+            ]
+          }
         } else {
           this.showToast({
             message: `加载上一轮看法问题填写结果关键词整体的分布失败，${res.data.message}`,
@@ -903,7 +904,7 @@ export default {
           this.viewOverallDist.keywordCount.series = [
             {
               name: '暂无数据',
-              textSize: 20,
+              textSize: 16,
             },
           ]
         }
@@ -916,7 +917,7 @@ export default {
         this.viewOverallDist.keywordCount.series = [
           {
             name: '暂无数据',
-            textSize: 20,
+            textSize: 16,
           },
         ]
       })
