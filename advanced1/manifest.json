@@ -56,7 +56,7 @@
         "usingComponents" : true
     },
     "h5" : {
-        "title" : "TBD问卷",
+        "title" : "深度辅导影响调研",
         "router" : {
             "mode" : "history"
         },
