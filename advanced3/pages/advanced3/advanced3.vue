@@ -377,7 +377,7 @@ export default {
 				`,
       questionId: 4,
       previousQuestionId: 3,
-      previousQuestionContent: null,
+      previousQuestionContent: undefined,
       isOverallDistLoaded: false,
       attitudeOverallDist: {
         categories: [],
@@ -443,39 +443,39 @@ export default {
       },
       attitudeQuestion: {
         numberBoundaryQuestion: {
-          content: null,
-          min: null,
-          max: null,
-          marks: null,
+          content: undefined,
+          min: undefined,
+          max: undefined,
+          marks: undefined,
         },
       },
       priceQuestion: {
-        attitudeThreshold: null,
+        attitudeThreshold: undefined,
         optionQuestion: {
-          content: null,
-          option: null,
+          content: undefined,
+          option: undefined,
         },
       },
       lengthQuestion: {
-        attitudeThreshold: null,
+        attitudeThreshold: undefined,
         optionQuestion: {
-          content: null,
-          option: null,
+          content: undefined,
+          option: undefined,
         },
       },
       viewQuestion: {
         textFillingQuestion: {
-          content: null,
+          content: undefined,
         }
       },
       submission: {
-        studentId: null,
+        studentId: undefined,
         opinionItem: {
-          questionId: null,
+          questionId: undefined,
           attitude: 5,
-          priceOptionKey: null,
-          lengthOptionKey: null,
-          view: null,
+          priceOptionKey: undefined,
+          lengthOptionKey: undefined,
+          view: undefined,
         },
       },
       basicInfoFormRules: {
@@ -548,12 +548,12 @@ export default {
   watch: {
     shouldShowPriceQuestion: function (val, oldVal) {
       if (val === false) {
-        this.submission.opinionItem.priceOptionKey = null
+        this.submission.opinionItem.priceOptionKey = undefined
       }
     },
     shouldShowLengthQuestion: function (val, oldVal) {
       if (val === false) {
-        this.submission.opinionItem.lengthOptionKey = null
+        this.submission.opinionItem.lengthOptionKey = undefined
       }
     },
   },
