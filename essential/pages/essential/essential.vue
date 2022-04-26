@@ -124,15 +124,27 @@
                 :index="index"
             >
               <u-form-item
-                  label="姓名"
+                  :label="'姓名' + (index + 1)"
                   :required="true"
                   prop="'friendItemList.' + index + '.name'"
               >
-                <u--input
-                    prefixIcon="account"
+                <el-select
+                    :clearable="true"
+                    :filterable="true"
+                    :remote="true"
                     placeholder="请输入姓名"
-                    v-model="submission.friendItemList[index].name"
-                ></u--input>
+                    :remote-method="query => loadSelectorFriendList(query, index)"
+                    :loading="friendSelector[index].isLoading"
+                    v-model="submission.friendItemList[index].studentId"
+                    @clear="clearSelectorFriendList($event, index)"
+                >
+                  <el-option
+                      v-for="item in friendSelector[index].student"
+                      :key="item.studentId"
+                      :label="item.sclass + ' ' + item.name"
+                      :value="item.studentId"
+                  ></el-option>
+                </el-select>
               </u-form-item>
 
               <u-row justify="space-between" gutter="12">
@@ -280,6 +292,7 @@
 
 <script>
 import {getQuestionByQuestionId} from '@/api/question'
+import {getStudentByName} from '@/api/student'
 import {submitEssential} from '@/api/questionnaire'
 import StatusCode from '@/common/statusCode'
 
@@ -327,6 +340,12 @@ export default {
           marks: undefined,
         },
       },
+      friendSelector: [
+        {
+          isLoading: false,
+          student: [],
+        }
+      ],
       attitudeQuestion: {
         numberBoundaryQuestion: {
           content: undefined,
@@ -355,7 +374,7 @@ export default {
         roommateIntimacy: 5,
         friendItemList: [
           {
-            name: '',
+            studentId: undefined,
             intimacy: 5,
           },
         ],
@@ -482,13 +501,46 @@ export default {
     confirmStatement() {
       this.shouldShowStatement = false
     },
+    loadSelectorFriendList(query, index) {
+      query = query.trim()
+      if (query !== '') {
+        this.friendSelector[index].student = []
+        this.friendSelector[index].isLoading = true
+        getStudentByName(query).then(res => {
+          if (res.data.status === StatusCode.SUCCESS) {
+            this.friendSelector[index].student = res.data.data
+            this.friendSelector[index].isLoading = false
+          } else {
+            this.showToast({
+              message: `加载学生信息失败，${res.data.message}`,
+              type: 'error',
+            })
+          }
+        }).catch(error => {
+          this.showToast({
+            message: `加载学生信息失败，${error}`,
+            type: 'error',
+          })
+        })
+      } else {
+        this.friendSelector[index].student = []
+      }
+    },
+    clearSelectorFriendList(event, index) {
+      this.friendSelector[index].student = []
+    },
     addFriendItem() {
+      this.friendSelector.push({
+        isLoading: false,
+        student: [],
+      })
       this.submission.friendItemList.push({
-        name: '',
+        studentId: undefined,
         intimacy: 5,
       })
     },
     removeFriendItem(index) {
+      this.friendSelector.splice(index, 1)
       this.submission.friendItemList.splice(index, 1)
     },
     selectPriceOpinion(name) {
@@ -510,21 +562,34 @@ export default {
       this.$refs.basicInfoForm.validate().then(res => {
         const submission = this.submission
 
+        const friendToIndexMap = new Map()
         for (let i = 0; i < submission.friendItemList.length; i++) {
           const friendItem = submission.friendItemList[i]
 
-          if (typeof friendItem.name != 'string' || friendItem.name.trim().length === 0) {
+          if (typeof friendItem.studentId !== 'number' || !/^\d{8}$/g.test(String(friendItem.studentId))) {
             this.showToast({
-              message: `请填写亲密同学的姓名(第${i + 1}位)`,
+              message: `亲密好友填写有误（第${i + 1}名）`,
               type: 'error',
             })
 
             return
           }
 
-          if (/[^\u4e00-\u9fa5]/.test(friendItem.name)) {
+          let existingFriendIndex = friendToIndexMap.get(friendItem.studentId)
+          if (existingFriendIndex !== undefined) {
             this.showToast({
-              message: `亲密同学的姓名只能包含中文(第${i + 1}位)`,
+              message: `亲密好友不能重复（第${existingFriendIndex + 1}名和${i + 1}名）`,
+              type: 'error',
+            })
+
+            return
+          }
+
+          friendToIndexMap.set(friendItem.studentId, i)
+
+          if (friendItem.studentId === parseInt(submission.studentId)) {
+            this.showToast({
+              message: `亲密好友不能填自己（第${i + 1}名）`,
               type: 'error',
             })
 
@@ -635,6 +700,10 @@ export default {
 }
 
 .questionnaire .questionnaire-cell .questionnaire-friend-cell {
+}
+
+.questionnaire .questionnaire-cell .questionnaire-friend-cell .el-select {
+  width: 100%;
 }
 
 .questionnaire .questionnaire-cell .questionnaire-friend-cell .u-button {
