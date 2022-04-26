@@ -25,9 +25,9 @@ page {
 }
 
 /* #endif */
-.example-info {
-  font-size: 14px;
-  color: #333;
-  padding: 10px;
+
+// 解决iOS需要双击才能选中下拉框
+.el-scrollbar .el-scrollbar__bar {
+  opacity: 1 !important;
 }
 </style>
