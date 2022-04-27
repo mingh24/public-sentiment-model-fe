@@ -417,6 +417,8 @@ export default {
           priceOptionKey: undefined,
           lengthOptionKey: undefined,
           view: undefined,
+          hasRequestedOverallDist: false,
+          hasRequestedIntimateDist: false,
         },
       },
       basicInfoFormRules: {
@@ -500,10 +502,11 @@ export default {
   },
   onShow() {
     this.submission.opinionItem.questionId = this.questionId
+    this.submission.opinionItem.hasRequestedOverallDist = false
+    this.submission.opinionItem.hasRequestedIntimateDist = false
     this.isOverallDistLoaded = false
     this.isIntimateDistLoaded = false
 
-    this.isAttitudeOverallDistLoaded = false
     this.attitudeOverallDist = {
       categories: [],
       series: [
@@ -513,7 +516,6 @@ export default {
       ],
     }
 
-    this.isPriceOptionOverallDistLoaded = false
     this.priceOptionOverallDist = {
       categories: [],
       series: [
@@ -523,7 +525,6 @@ export default {
       ],
     }
 
-    this.isLengthOptionOverallDistLoaded = false
     this.lengthOptionOverallDist = {
       categories: [],
       series: [
@@ -675,15 +676,22 @@ export default {
         if (res.data.status === StatusCode.SUCCESS) {
           const rawOverallDist = res.data.data.attitudeOverallDist
           const parsedOverallDist = this.parseAttitudeOverallDist(rawOverallDist)
-          this.attitudeOverallDist.series.push({})
 
           if (parsedOverallDist.length > 0) {
-            this.attitudeOverallDist.series[0].data = parsedOverallDist
-          } else {
-            this.attitudeOverallDist.series[0].data = [
+            this.attitudeOverallDist.series = [
               {
-                name: '暂无数据',
-                value: 0,
+                data: parsedOverallDist,
+              },
+            ]
+          } else {
+            this.attitudeOverallDist.series = [
+              {
+                data: [
+                  {
+                    name: '暂无数据',
+                    value: 0,
+                  },
+                ],
               },
             ]
           }
@@ -693,11 +701,14 @@ export default {
             type: 'error',
           })
 
-          this.attitudeOverallDist.series.push({})
-          this.attitudeOverallDist.series[0].data = [
+          this.attitudeOverallDist.series = [
             {
-              name: '暂无数据',
-              value: 0,
+              data: [
+                {
+                  name: '暂无数据',
+                  value: 0,
+                },
+              ],
             },
           ]
         }
@@ -707,11 +718,14 @@ export default {
           type: 'error',
         })
 
-        this.attitudeOverallDist.series.push({})
-        this.attitudeOverallDist.series[0].data = [
+        this.attitudeOverallDist.series = [
           {
-            name: '暂无数据',
-            value: 0,
+            data: [
+              {
+                name: '暂无数据',
+                value: 0,
+              },
+            ],
           },
         ]
       })
@@ -721,43 +735,56 @@ export default {
         if (res.data.status === StatusCode.SUCCESS) {
           const rawOverallDist = res.data.data.priceOptionOverallDist
           const parsedOverallDist = this.parsePriceOptionOverallDist(rawOverallDist)
-          this.priceOptionOverallDist.series.push({})
 
           if (parsedOverallDist.length > 0) {
-            this.priceOptionOverallDist.series[0].data = parsedOverallDist
-          } else {
-            this.priceOptionOverallDist.series[0].data = [
+            this.priceOptionOverallDist.series = [
               {
-                name: '暂无数据',
-                value: 0,
+                data: parsedOverallDist,
+              },
+            ]
+          } else {
+            this.priceOptionOverallDist.series = [
+              {
+                data: [
+                  {
+                    name: '暂无数据',
+                    value: 0,
+                  },
+                ],
               },
             ]
           }
         } else {
           this.showToast({
-            message: `加载上一轮价钱问题填写结果整体的分布失败，${res.data.message}`,
+            message: `加载上一轮价格问题填写结果整体的分布失败，${res.data.message}`,
             type: 'error',
           })
 
-          this.priceOptionOverallDist.series.push({})
-          this.priceOptionOverallDist.series[0].data = [
+          this.priceOptionOverallDist.series = [
             {
-              name: '暂无数据',
-              value: 0,
+              data: [
+                {
+                  name: '暂无数据',
+                  value: 0,
+                },
+              ],
             },
           ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮价钱问题填写结果整体的分布失败，${error}`,
+          message: `加载上一轮价格问题填写结果整体的分布失败，${error}`,
           type: 'error',
         })
 
-        this.priceOptionOverallDist.series.push({})
-        this.priceOptionOverallDist.series[0].data = [
+        this.priceOptionOverallDist.series = [
           {
-            name: '暂无数据',
-            value: 0,
+            data: [
+              {
+                name: '暂无数据',
+                value: 0,
+              },
+            ],
           },
         ]
       })
@@ -767,15 +794,22 @@ export default {
         if (res.data.status === StatusCode.SUCCESS) {
           const rawOverallDist = res.data.data.lengthOptionOverallDist
           const parsedOverallDist = this.parseLengthOptionOverallDist(rawOverallDist)
-          this.lengthOptionOverallDist.series.push({})
 
           if (parsedOverallDist.length > 0) {
-            this.lengthOptionOverallDist.series[0].data = parsedOverallDist
-          } else {
-            this.lengthOptionOverallDist.series[0].data = [
+            this.lengthOptionOverallDist.series = [
               {
-                name: '暂无数据',
-                value: 0,
+                data: parsedOverallDist,
+              },
+            ]
+          } else {
+            this.lengthOptionOverallDist.series = [
+              {
+                data: [
+                  {
+                    name: '暂无数据',
+                    value: 0,
+                  },
+                ],
               },
             ]
           }
@@ -785,11 +819,14 @@ export default {
             type: 'error',
           })
 
-          this.lengthOptionOverallDist.series.push({})
-          this.lengthOptionOverallDist.series[0].data = [
+          this.lengthOptionOverallDist.series = [
             {
-              name: '暂无数据',
-              value: 0,
+              data: [
+                {
+                  name: '暂无数据',
+                  value: 0,
+                },
+              ],
             },
           ]
         }
@@ -799,14 +836,19 @@ export default {
           type: 'error',
         })
 
-        this.lengthOptionOverallDist.series.push({})
-        this.lengthOptionOverallDist.series[0].data = [
+        this.lengthOptionOverallDist.series = [
           {
-            name: '暂无数据',
-            value: 0,
+            data: [
+              {
+                name: '暂无数据',
+                value: 0,
+              },
+            ],
           },
         ]
       })
+
+      this.submission.opinionItem.hasRequestedOverallDist = true
     },
     fetchAllIntimateDist() {
       if (!/^\d{8}$/g.test(String(this.submission.studentId))) {
@@ -849,15 +891,22 @@ export default {
 
           const rawIntimateDist = res.data.data.attitudeIntimateDist
           const parsedIntimateDist = this.parseAttitudeIntimateDist(rawIntimateDist)
-          this.attitudeIntimateDist.series.push({})
 
           if (parsedIntimateDist.length > 0) {
-            this.attitudeIntimateDist.series[0].data = parsedIntimateDist
-          } else {
-            this.attitudeIntimateDist.series[0].data = [
+            this.attitudeIntimateDist.series = [
               {
-                name: '暂无数据',
-                value: 0,
+                data: parsedIntimateDist,
+              },
+            ]
+          } else {
+            this.attitudeIntimateDist.series = [
+              {
+                data: [
+                  {
+                    name: '暂无数据',
+                    value: 0,
+                  },
+                ],
               },
             ]
           }
@@ -867,11 +916,14 @@ export default {
             type: 'error',
           })
 
-          this.attitudeIntimateDist.series.push({})
-          this.attitudeIntimateDist.series[0].data = [
+          this.attitudeIntimateDist.series = [
             {
-              name: '暂无数据',
-              value: 0,
+              data: [
+                {
+                  name: '暂无数据',
+                  value: 0,
+                },
+              ],
             },
           ]
         }
@@ -881,11 +933,14 @@ export default {
           type: 'error',
         })
 
-        this.attitudeIntimateDist.series.push({})
-        this.attitudeIntimateDist.series[0].data = [
+        this.attitudeIntimateDist.series = [
           {
-            name: '暂无数据',
-            value: 0,
+            data: [
+              {
+                name: '暂无数据',
+                value: 0,
+              },
+            ],
           },
         ]
       })
@@ -902,43 +957,56 @@ export default {
 
           const rawIntimateDist = res.data.data.priceOptionIntimateDist
           const parsedIntimateDist = this.parsePriceOptionIntimateDist(rawIntimateDist)
-          this.priceOptionIntimateDist.series.push({})
 
           if (parsedIntimateDist.length > 0) {
-            this.priceOptionIntimateDist.series[0].data = parsedIntimateDist
-          } else {
-            this.priceOptionIntimateDist.series[0].data = [
+            this.priceOptionIntimateDist.series = [
               {
-                name: '暂无数据',
-                value: 0,
+                data: parsedIntimateDist,
+              },
+            ]
+          } else {
+            this.priceOptionIntimateDist.series = [
+              {
+                data: [
+                  {
+                    name: '暂无数据',
+                    value: 0,
+                  },
+                ],
               },
             ]
           }
         } else {
           this.showToast({
-            message: `加载上一轮价钱问题填写结果在亲密同学中的分布失败，${res.data.message}`,
+            message: `加载上一轮价格问题填写结果在亲密同学中的分布失败，${res.data.message}`,
             type: 'error',
           })
 
-          this.priceOptionIntimateDist.series.push({})
-          this.priceOptionIntimateDist.series[0].data = [
+          this.priceOptionIntimateDist.series = [
             {
-              name: '暂无数据',
-              value: 0,
+              data: [
+                {
+                  name: '暂无数据',
+                  value: 0,
+                },
+              ],
             },
           ]
         }
       }).catch(error => {
         this.showToast({
-          message: `加载上一轮价钱问题填写结果在亲密同学中的分布失败，${error}`,
+          message: `加载上一轮价格问题填写结果在亲密同学中的分布失败，${error}`,
           type: 'error',
         })
 
-        this.priceOptionIntimateDist.series.push({})
-        this.priceOptionIntimateDist.series[0].data = [
+        this.priceOptionIntimateDist.series = [
           {
-            name: '暂无数据',
-            value: 0,
+            data: [
+              {
+                name: '暂无数据',
+                value: 0,
+              },
+            ],
           },
         ]
       })
@@ -955,15 +1023,22 @@ export default {
 
           const rawIntimateDist = res.data.data.lengthOptionIntimateDist
           const parsedIntimateDist = this.parseLengthOptionIntimateDist(rawIntimateDist)
-          this.lengthOptionIntimateDist.series.push({})
 
           if (parsedIntimateDist.length > 0) {
-            this.lengthOptionIntimateDist.series[0].data = parsedIntimateDist
-          } else {
-            this.lengthOptionIntimateDist.series[0].data = [
+            this.lengthOptionIntimateDist.series = [
               {
-                name: '暂无数据',
-                value: 0,
+                data: parsedIntimateDist,
+              },
+            ]
+          } else {
+            this.lengthOptionIntimateDist.series = [
+              {
+                data: [
+                  {
+                    name: '暂无数据',
+                    value: 0,
+                  },
+                ],
               },
             ]
           }
@@ -973,11 +1048,14 @@ export default {
             type: 'error',
           })
 
-          this.lengthOptionIntimateDist.series.push({})
-          this.lengthOptionIntimateDist.series[0].data = [
+          this.lengthOptionIntimateDist.series = [
             {
-              name: '暂无数据',
-              value: 0,
+              data: [
+                {
+                  name: '暂无数据',
+                  value: 0,
+                },
+              ],
             },
           ]
         }
@@ -987,14 +1065,19 @@ export default {
           type: 'error',
         })
 
-        this.lengthOptionIntimateDist.series.push({})
-        this.lengthOptionIntimateDist.series[0].data = [
+        this.lengthOptionIntimateDist.series = [
           {
-            name: '暂无数据',
-            value: 0,
+            data: [
+              {
+                name: '暂无数据',
+                value: 0,
+              },
+            ],
           },
         ]
       })
+
+      this.submission.opinionItem.hasRequestedIntimateDist = true
     },
     submit() {
       this.$refs.basicInfoForm.validate().then(res => {

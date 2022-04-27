@@ -384,6 +384,8 @@ export default {
           priceOptionKey: undefined,
           lengthOptionKey: undefined,
           view: undefined,
+          hasRequestedOverallDist: undefined,
+          hasRequestedIntimateDist: undefined,
         },
       },
       basicInfoFormRules: {
