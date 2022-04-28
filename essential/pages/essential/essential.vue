@@ -301,20 +301,7 @@ export default {
     return {
       isLoading: true,
       shouldShowStatement: false,
-      statement: `
-				<p style="line-height: 2em;">
-				    亲爱的同学：<br/>
-				</p>
-				<p style="text-indent: 2em; line-height: 2em;">
-				    您好！本次调查旨在更好地了解学生成长，以便更好地为您提供服务。学院组织本次调研活动，填写时请根据您的实际情况选择，谢谢您的支持与配合！对您填答的信息，本调研将严格遵循《中华人民共和国统计法》予以保密。感谢您参与本次调查！<br/>
-				</p>
-				<p style="text-indent: 2em; text-align: right; line-height: 2em;">
-				    詹天佑学院学生工作办公室<br/>
-				</p>
-				<p style="text-indent: 2em; text-align: right; line-height: 2em;">
-				    2022年3月9日
-				</p>
-				`,
+      statement: undefined,
       questionId: 1,
       classmateIntimacyQuestion: {
         numberBoundaryQuestion: {
@@ -456,6 +443,9 @@ export default {
     },
   },
   watch: {
+    shouldShowStatement: function (val, oldVal) {
+      this.shouldShowStatement = this.shouldShowStatement && this.statement !== undefined
+    },
     shouldShowPriceQuestion: function (val, oldVal) {
       if (val === false) {
         this.submission.opinionItem.priceOptionKey = undefined
@@ -472,6 +462,8 @@ export default {
 
     getQuestionByQuestionId(this.questionId).then(res => {
       if (res.data.status === StatusCode.SUCCESS) {
+        this.statement = res.data.data.statement
+
         const questionContent = res.data.data.questionContent
         this.classmateIntimacyQuestion = questionContent.classmateIntimacyQuestion
         this.classmateIntimacyQuestion.numberBoundaryQuestion.marks = JSON.parse(this.classmateIntimacyQuestion.numberBoundaryQuestion.marks)
